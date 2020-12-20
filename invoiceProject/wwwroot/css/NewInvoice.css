@@ -1,0 +1,31 @@
+ .MyForm {
+     text-align: right;
+     width: 75%;
+     margin-top: 5%;
+ }
+
+ #mainDiv {
+     width: -webkit-fill-available;
+ }
+
+ .sendButton {
+     margin-bottom: 100px;
+     margin-top: 20px;
+     width: 100% !important;
+ }
+
+ .form-check-inline,
+ .form-check-input {
+     margin-right: 0px !important;
+ }
+
+ .form-check-label {
+     margin-bottom: 0;
+     margin-right: 6px;
+ }
+
+ label {
+     display: inline-block;
+     margin-bottom: .5rem;
+     margin-right: 4px;
+ }

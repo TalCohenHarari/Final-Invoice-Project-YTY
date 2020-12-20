@@ -1,0 +1,76 @@
+/*-----------------------navbar START----------------*/
+
+header {
+    height: 645px;
+    background-image: url("../images/header.png");
+    background-size: cover;
+}
+
+.headerimage{
+    height: 46px;
+    width: 250px;
+    margin-left: 5%;
+    margin-top: 8px;
+}
+.registerButton,.loginButton {
+    border-radius: 30px;
+    border: solid 1px white;  
+    font-size: 20px;
+    fill: #ffffff;
+    color: #ffffff;
+    background-color: rgba(0,0,0,0);
+    border-style: solid;
+    border-width: 2px 2px 2px 2px;
+    border-color: #ffffff;
+    border-radius: 30px 30px 30px 30px;
+    padding: 0.4em 2em 0.5em 2em;
+    font-family: "Open Sans Hebrew", Sans-serif;
+    font-weight: 500;
+    
+}
+
+*:focus {
+    outline: 0 !important;
+}
+
+.loginButton{
+    margin-left: 8px;
+}
+.registerButton a,.loginButton a{
+    color: white;
+    text-decoration: none;
+}
+.signButtons{
+    margin-top: 8px;
+    margin-right: 50px;
+}
+
+.signButtons .button:hover {
+    background-color: #34a6ca;
+    transition-duration: 0.4s;
+    color: white;
+    border: solid 1px #34a6ca;
+  }
+
+
+
+.mynav{
+    justify-content: center;
+   
+}
+
+.mynav a{
+    color: white !important;
+    font-family: "Open Sans Hebrew", Sans-serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    margin: 0 25px 0 25px;
+    border-bottom: 3px solid transparent;
+}
+
+.mynav a:hover{
+    transition-duration: 0.4s;
+    color: #34a6ca !important;
+    border-bottom: 3px solid #34a6ca;
+    
+}

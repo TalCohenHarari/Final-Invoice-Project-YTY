@@ -1,0 +1,153 @@
+﻿@model IEnumerable<invoiceProject.Models.Credit>
+
+@{ ViewData["Title"] = "Index";
+    Layout = "_UserLayout";
+}
+
+@section css {
+    <link href="@Url.Content("~/css/ViewInvoices.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/DeleteButton.css")" rel="stylesheet" />
+}
+
+<div style="margin-top: 50px;" id="content-wrapper" class="myAccountCss d-flex flex-column">
+    <div class="container">
+        <h1 class="MainTitel">זיכויים</h1>
+        <div>
+            <input id="myInput" type="text" name="search" placeholder="חיפוש..." class="form-control search-input" data-table="customers-list">
+        </div>
+        <table class="table table-striped table-bordered js-sort-table customers-list">
+
+            <tr class="thead-dark">
+                <th class="js-sort-string">שם החנות</th>
+                <th>קטגוריה</th>
+                <th>תוקף זיכוי</th>
+                <th class="js-sort-number">סכום</th>
+            </tr>
+            @{ if (Model.Count() != 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-trash" style=" cursor: pointer;"></i></span>
+                                <div id="id01" class="modal">
+                                    <form class="modal-content" asp-controller="Credits" asp-action="Delete">
+                                        <div class="containerOther">
+                                            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                                            <h1 class="hrOther">מחיקת זיכוי</h1>
+                                            <p>האם את/ה בטוח/ה שברצונך למחוק זיכוי זה?</p>
+                                            <div class="clearfix">
+                                                <button onclick="document.getElementById('id01').style.display='none'" type="button" class="cancelbtn other">ביטול</button>
+                                                <input type="hidden" asp-for="@item.CreditID" name="id" />
+                                                <input type="submit" value="מחק" class="deletebtn other" name="creditId" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                @Html.DisplayFor(modelItem => item.StoreName)
+                            </td>
+                            <td>תוסיף משתנה קטגוריה למודל</td>
+                            <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">אין לך שום זיכויים</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    <script src="~/js/sort-table.min.js"></script>
+    <script src="~/js/searchBoxFilter.js"></script>
+    @*<script src="~/js/Sort_Tables.js"></script>*@
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model IEnumerable<invoiceProject.Models.Credit>
+
+    @{
+        ViewData["Title"] = "Index";
+    }
+
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.StoreName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExpireDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.user)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StoreName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpireDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.FirstName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CreditID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CreditID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CreditID">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@

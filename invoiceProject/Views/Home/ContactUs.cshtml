@@ -1,0 +1,77 @@
+﻿@{ 
+    ViewData["Title"] = "ContactUs";
+    Layout = "_Layout-2"; 
+  }
+@section css {
+    <link href="@Url.Content("~/css/ContactUs.css")" rel="stylesheet" />
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <img class="image" src="~/images/bg-01.jpg" />
+        </div>
+    </div>
+    <div class="row formRow" style="margin-top: 8%;">
+        <div class="col-lg-6">
+            <h2 class="formheader h1-responsive font-weight-bold text-right my-4">צור קשר</h2>
+            <form class="form" id="contact-form" name="contact-form" action="mail.php" method="POST">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-form form-group">
+                            <label for="name" class="">שם*</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form form-group">
+                            <label for="email" class="">אימייל*</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form form-group">
+                            <label for="subject" class="">נושא</label>
+                            <input type="text" id="subject" name="subject" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form form-group">
+                            <label for="message">ההודעה שלי</label>
+                            <textarea type="text" id="message" name="message" rows="7"
+                                      class="form-control md-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttonSubmitDir">
+                    <button style="display: block" class="buttonSubmit btn btn-secondary btn-lg" type="submit"
+                            form="contact-form" value="Submit">
+                        שליחה
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-6">
+            <div class="text">
+                <p>
+                    מחלקת שירות הלקוחות זמינה לרשותך במגוון ערוצי תקשורת
+                </p>
+                <p>
+                    מוקד טלפוני של שירות הלקוחות זמין בימים א-ה בין השעות 09:00-18:00 במספר טלפון 03-1234567
+                </p>
+                <p class="d-none d-lg-block">
+                    נשמח לשוחח עמך באמצעות צ'אט און ליין באתר הבית MyInvoice.co.il בימים א-ה בין השעות 09:00-18:00
+                    אנחנו זמינים בפייסבוק ובאינסטגרם של MyInvoice
+                    ניתן ליצור עמנו קשר במייל myinvoice@gmail.com
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

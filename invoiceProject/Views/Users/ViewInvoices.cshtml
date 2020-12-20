@@ -1,0 +1,63 @@
+﻿@{ ViewData["Title"] = "View Invoice";
+                Layout = "_UserLayout"; }
+@*@section css {
+    <link href="@Url.Content("~/css/ViewInvoices.css")" rel="stylesheet" />
+}*@
+
+
+<!--contain-->
+<div style="margin-top: 50px;" id="content-wrapper" class="myAccountCss d-flex flex-column">
+    <div class="container">
+        <h1 class="MainTitel">חשבוניות</h1>
+        <div>
+            <input id="myInput" type="text" name="search" placeholder="חיפוש...">
+        </div>
+        <table class="table table-striped table-bordered">
+            <tr class="thead-dark">
+                <th>שם החנות</th>
+                <th>קטגוריה</th>
+                <th>תאריך קנייה</th>
+                <th>סכום</th>
+            </tr>
+            <tr>
+                <td>ZARA</td>
+                <td>ביגוד</td>
+                <td>01/11/2021</td>
+                <td>400</td>
+            </tr>
+            <tr>
+                <td>עידן 2000</td>
+                <td>צעצועים</td>
+                <td>02/02/2020</td>
+                <td>300</td>
+            </tr>
+            <tr>
+                <td>ADIDAS</td>
+                <td>ביגוד</td>
+                <td>11/07/2019 </td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <td>Shoshi-Yegudayov</td>
+                <td>של הביוקר!</td>
+                <td>23/07/2019 </td>
+                <td>999</td>
+            </tr>
+            <tr>
+                <td>מחסני-חשמל</td>
+                <td>חשמל</td>
+                <td>11/07/2019 </td>
+                <td>800</td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!--End Contain-->
+
+
+</div>
+
+<!-- End of Content Wrapper -->
+<!--End Contain-->

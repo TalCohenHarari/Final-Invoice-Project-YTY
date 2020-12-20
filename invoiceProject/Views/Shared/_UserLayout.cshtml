@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - invoiceProject</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/UserSidebar.css" />
+    <link rel="stylesheet" href="~/css/ViewInvoices.css" />
+    <link href="~/css/MyAccount.css" rel="stylesheet">
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="./https://use.fontawesome.com/releases/v5.7.2/css/all.css" />
+    @RenderSection("css", false)
+</head>
+<body>
+    <!-- Topbar -->
+    <nav class="navbar-expand navbar-light bg-white static-top shadow">
+        <div class="row d-lg-none">
+            <div class="col-1 ">
+                <button id="sidebarToggleTop" class="btn btn-link rounded-circle">
+                    <i class="fa fa-bars fa-lg"></i>
+                </button>
+            </div>
+            <div class="col-1">
+                <button class="btn "
+                    onclick="location.href='@Url.Action("Login", "Users")'">
+                    <i class="fa fa-user fa-lg"></i>
+                </button>
+            </div>
+            <div class="col-1  offset-6">
+                <button class="btn "
+                    onclick="location.href='@Url.Action("Index", "Home")'">
+                    <i class="fa fa-home fa-lg"></i>
+                </button>
+            </div>
+            <div class="col-3">
+                <img style="width: 100% !important;" src="~/images/logo2.png" alt="">
+            </div>
+        </div>
+    </nav>
+    <!-- End of Topbar -->
+    <header class="header d-none d-lg-block">
+        <div class="navrow ">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <img class="headerimage" src="~/images/logo2.png" alt="">
+                <!-- <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button> -->
+
+                <div class="mynav collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav" style="direction: rtl;">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">דף הבית</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="ContactUs">צור קשר</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="AboutUs">אודות</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-none d-lg-block">
+                    <button type="button" class="loginButton btn btn-primary"
+                           onclick="location.href='@Url.Action("Logout", "Users")'">
+                        התנתק
+                    </button>
+
+                    @*<button type="button" class="loginButton btn btn-primary"
+                         onclick="window.location.href='@Url.Action("Register", "Users")'">
+                        הרשמה
+                    </button>*@
+                </div>
+
+            </nav>
+
+        </div>
+    </header>
+    <div id="page-top">
+        <!-- Page Wrapper -->
+        <div style="background-color: #f8f9fc;" id="wrapper">
+            <!--SideBar-->
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-laugh-wink"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">שלום @Context.User.Claims.FirstOrDefault(c=>c.Type== "FullName")?.Value</div>
+                </a>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    חשבוניות
+                </div>
+
+                <!-- Incoices -->
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Users" asp-action="ViewInvoices">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>צפייה בחשבוניות</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Users" asp-action="NewInvoice">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>הוספת חשבונית</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    זיכויים
+                </div>
+
+                <!-- Incoices -->
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Credits" asp-action="Index">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>צפייה בזיכויים</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"  asp-controller="Credits" asp-action="Create">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>הוספת זיכוי</span>
+                    </a>
+                </li>
+
+
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
+                <!-- Divider -->
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    גיפט-קארד
+                </div>
+
+                <!-- Incoices -->
+                <li class="nav-item">
+                    <a class="nav-link"  asp-controller="Users" asp-action="ViewGiftCards">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>צפייה בגיפט-קארדים</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"  asp-controller="Users" asp-action="NewGiftCard">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>הוספת גיפט-קארד</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
+            </ul>
+            <!--End of Sidebar-->
+            <!--contain-->
+            @RenderBody();
+            <!--End Contain-->
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+
+    <footer class="page-footer font-small blue pt-4">
+        <div class="container-fluid text-center text-md-left ">
+            <div class="row">
+
+
+                <hr class="clearfix w-100 d-md-none pb-3">
+
+                <!-- Grid column -->
+                <div class="text-right col-md-3 mb-md-0 mb-3">
+                    <h6 class="text-uppercase font-weight-bold">invoices</h6>
+
+                    <div class="afootertext">
+                        <p>
+                            <a asp-controller="Home" asp-action="Index">דף הבית</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="ContactUs">צור קשר</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="AboutUs">אודות</a>
+                        </p>
+                    </div>
+                </div>
+                <!-- Grid column -->
+                <!-- Grid column -->
+                <div class="text-right col-md-3 mb-md-0 mb-3">
+                    <h5 class="text-uppercase">אזור אישי</h5>
+
+                    <div class="afootertext">
+                        <p>
+                            <a asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Users" asp-action="Register">הרשמה</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Users" asp-action="Login">התחברות</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-md-0 mt-3">
+                    <!-- Content -->
+                    <img class="logoFotter dark-grey-text" src="~/images/logo2.png" />
+                    <div class="iconsFotter">
+                        <a href="#"><i class="fab fa-instagram fa-2x" style="color:#bc2a8d;"></i></a>
+                        <a href="#"><i class="fab fa-twitter fa-2x" style="color:#00aced !important; "></i></a>
+                    </div>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row -->
+
+        </div>
+        <!--END Footer Links -->
+        <!-- Copyright -->
+        <div style="background-color: rgb(59, 59, 59); padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; color: white !important; font-family: 'Open Sans Hebrew', Sans-serif;"
+             class="footer-copyright text-center text-black-50 py-3">
+            ©️ 2020 Created By Yechiel Raveh & Tal Harari & Yoel Borochov
+            <a class="dark-grey-text" href="#"> Digital-Tech</a>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+
+    <!-- Footer -->
+
+
+
+    <!-- jQuery and JS bundle w/ Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+    </script>
+    <!--******-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/sb-admin-2.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="~/vendor/chart.js/Chart.min.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="~/js/demo/chart-area-demo.js"></script>
+    <script src="~/js/demo/chart-pie-demo.js"></script>
+
+
+
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+
+
+

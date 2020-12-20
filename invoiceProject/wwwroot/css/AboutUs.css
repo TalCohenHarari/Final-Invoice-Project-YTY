@@ -1,0 +1,47 @@
+﻿.rowAboutUs {
+    margin-top: 50px;
+
+}
+
+.aboutUsTitle {
+    text-align: right !important;
+    margin-right: 100px;
+    margin-top: 30px;
+    font-size: 25px;
+}
+
+/* .about p {
+    text-align: right;
+}
+
+.about2 p {
+    text-align: right;
+} */
+
+.rightImg {
+
+    width: 100%;
+
+}
+
+.about {
+    text-align: right;
+    margin-left: 20px;
+}
+
+.about2 {
+    text-align: right;
+    margin-top: 50px;
+}
+
+.Video {
+    width: 100%;
+    height: 300px;
+    float: right;
+    margin-top: 50px;
+
+}
+
+.secrow {
+    margin-bottom: 150px;
+}

@@ -1,0 +1,33 @@
+﻿@model invoiceProject.Models.User
+@{ ViewData["Title"] = "Index";
+    Layout = "_Layout-2"; }
+@section css {
+    <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" />
+}
+
+
+<div class="wrapper fadeInDown">
+
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 class="inactive underlineHover"><a asp-controller="Users" asp-action="Login">התחברות</a></h2>
+        <h2 class="active">הרשמה</h2>
+
+        <!-- Register Form -->
+        <form asp-controller="Users" asp-action="Register">
+            <input asp-for="FirstName" type="text" id="firstName" class="fadeIn second" name="firstName" placeholder="שם פרטי">
+            <input asp-for="LastName" type="text" id="lastName" class="fadeIn second" name="lastName" placeholder="שם משפחה">
+            <input asp-for="UserName" type="text" id="userName" class="fadeIn second" name="userName" placeholder="שם משתמש">
+            <input asp-for="Password" type="password" id="password" class="fadeIn third" name="password" placeholder="סיסמה">
+            <input asp-for="Email" type="email" id="email" class="fadeIn third" name="email" placeholder="אימייל">
+
+            <input type="submit" class="fadeIn fourth" value="הרשמה">
+        </form>
+
+        <!-- Remind Passowrd -->
+        <!-- <div id="formFooter">
+            <a class="underlineHover" href="#">Forgot Password?</a>
+        </div> -->
+
+    </div>
+</div>

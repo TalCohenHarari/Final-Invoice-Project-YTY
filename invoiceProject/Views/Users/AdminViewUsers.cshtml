@@ -1,0 +1,59 @@
+﻿@{ ViewData["Title"] = "View Invoice";
+                Layout = "_AdminLayout"; }
+@section css {
+    <link href="@Url.Content("~/css/ViewInvoices.css")" rel="stylesheet" />
+}
+
+
+<div style="margin-top: 50px;" id="content-wrapper" class="myAccountCss d-flex flex-column">
+    <div class="container">
+        <h1 class="MainTitel">משתמשים</h1>
+        <div>
+            <input id="myInput" type="text" name="search" placeholder="חיפוש...">
+        </div>
+        <table class="table table-striped table-bordered">
+            <tr class="thead-dark">
+                <th style="background-color: black !important">שם פרטי</th>
+                <th style="background-color: black !important">שם משפחה</th>
+                <th style="background-color: black !important">תאריך הצטרפות</th>
+
+            </tr>
+            <tr>
+                <td>יחיאל</td>
+                <td>רווה</td>
+                <td>01/11/2021</td>
+
+            </tr>
+            <tr>
+                <td>טל</td>
+                <td>הררי כהן</td>
+                <td>02/02/2020</td>
+
+            </tr>
+            <tr>
+                <td>יואל</td>
+                <td>בורוכוב</td>
+                <td>11/07/2019 </td>
+
+            </tr>
+            <tr>
+                <td>צדי</td>
+                <td>צרפתי</td>
+                <td>23/07/2019 </td>
+
+            </tr>
+            <tr>
+                <td>ביבי</td>
+                <td>נתניהו</td>
+                <td>11/07/2019 </td>
+
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!--End Contain-->
+
+
+</div>

@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - invoiceProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/HomePage.css" />
+    <!--Social media icons-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" />
+
+    @RenderSection("css", false)
+</head>
+<body>
+   
+    <header class="header">
+        <div class="navrow">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <img class="headerimage" src="~/images/logo2.png" alt="">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="mynav collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav" style="direction: rtl;">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">דף הבית</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="ContactUs">צור קשר</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="AboutUs">אודות</a>
+                        </li>
+
+                        <!--just in mobile-->
+                        <li class="nav-item d-lg-none">
+                            <a class="nav-link" asp-controller="Users" asp-action="Login">התחברות</a>
+                        </li>
+                        <li class="nav-item d-lg-none">
+                            <a class="nav-link" asp-controller="Users" asp-action="Register">הרשמה</a>
+                        </li>
+                        <!--END just in mobile-->
+                    </ul>
+                </div>
+
+                <div class="d-none d-lg-block">
+                    <button type="button" class="loginButton btn btn-primary"
+                            onclick="location.href='@Url.Action("Login", "Users")'">
+                        התחברות
+                    </button>
+
+                    <button type="button" class="loginButton btn btn-primary"
+                            onclick="window.location.href='@Url.Action("Register", "Users")'">
+                        הרשמה
+                    </button>
+                </div>
+
+            </nav>
+
+        </div>
+    </header>
+        <div>
+            @RenderBody()
+        </div>
+
+       
+
+    
+
+
+    <!-- Footer -->
+
+
+    <footer class="page-footer font-small blue pt-4">
+        <div class="container-fluid text-center text-md-left ">
+            <div class="row">
+
+
+                <hr class="clearfix w-100 d-md-none pb-3">
+
+                <!-- Grid column -->
+                <div class="text-right col-md-3 mb-md-0 mb-3">
+                    <h6 class="text-uppercase font-weight-bold">invoices</h6>
+
+                    <div class="afootertext">
+                        <p>
+                            <a asp-controller="Home" asp-action="Index">דף הבית</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="ContactUs">צור קשר</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="AboutUs">אודות</a>
+                        </p>
+                    </div>
+                </div>
+                <!-- Grid column -->
+                <!-- Grid column -->
+                <div class="text-right col-md-3 mb-md-0 mb-3">
+                    <h5 class="text-uppercase">אזור אישי</h5>
+
+                    <div class="afootertext">
+                        <p>
+                            <a asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Users" asp-action="Register">הרשמה</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Users" asp-action="Login">התחברות</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-md-0 mt-3">
+                    <!-- Content -->
+                    <img class="logoFotter dark-grey-text" src="~/images/logo2.png" />
+                    <div class="iconsFotter">
+                        <a href="#"><i class="fab fa-instagram fa-2x" style="color:#bc2a8d;"></i></a>
+                        <a href="#"><i class="fab fa-twitter fa-2x" style="color:#00aced !important; "></i></a>
+                    </div>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row -->
+
+        </div>
+        <!--END Footer Links -->
+        <!-- Copyright -->
+        <div style="background-color: rgb(59, 59, 59); padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; color: white !important; font-family: 'Open Sans Hebrew', Sans-serif;"
+             class="footer-copyright text-center text-black-50 py-3">
+            ©️ 2020 Created By Yechiel Raveh & Tal Harari & Yoel Borochov
+            <a class="dark-grey-text" href="#"> Digital-Tech</a>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
