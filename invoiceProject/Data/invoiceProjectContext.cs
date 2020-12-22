@@ -34,5 +34,7 @@ namespace invoiceProject.Data
         public DbSet<invoiceProject.Models.User> User { get; set; }
 
         public DbSet<invoiceProject.Models.Credit> Credit { get; set; }
+
+        public DbSet<invoiceProject.Models.Invoice> Invoice { get; set; }
     }
 }

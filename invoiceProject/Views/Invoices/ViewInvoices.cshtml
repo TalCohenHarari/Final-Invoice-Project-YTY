@@ -1,6 +1,6 @@
-﻿@model IEnumerable<invoiceProject.Models.Credit>
+﻿@model IEnumerable<invoiceProject.Models.Invoice>
 
-@{ ViewData["Title"] = "Index";
+@{ ViewData["Title"] = "צפייה בחשבוניות";
     Layout = "_UserLayout";
 }
 
@@ -11,7 +11,7 @@
 
 <div style="margin-top: 50px;" id="content-wrapper" class="myAccountCss d-flex flex-column">
     <div class="container">
-        <h1 class="MainTitel">זיכויים</h1>
+        <h1 class="MainTitel">חשבוניות</h1>
         <div>
             <input id="myInput" type="text" name="search" placeholder="חיפוש..." class="form-control search-input" data-table="customers-list">
         </div>
@@ -20,7 +20,8 @@
             <tr class="thead-dark">
                 <th class="js-sort-string">שם החנות</th>
                 <th>קטגוריה</th>
-                <th>תוקף זיכוי</th>
+                <th>תאריך קנייה</th>
+                <th>תוקף חשבונית</th>
                 <th class="js-sort-number">סכום</th>
             </tr>
             @{ if (Model.Count() != 0)
@@ -31,22 +32,23 @@
                             <td>
                                 <span onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-trash" style=" cursor: pointer;"></i></span>
                                 <div id="id01" class="modal">
-                                    <form class="modal-content" asp-controller="Credits" asp-action="Delete">
+                                    <form class="modal-content" asp-controller="Invoices" asp-action="Delete">
                                         <div class="containerOther">
                                             <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
                                             <h1 class="hrOther">מחיקת זיכוי</h1>
-                                            <p>האם את/ה בטוח/ה שברצונך למחוק זיכוי זה?</p>
+                                            <p>האם את/ה בטוח/ה שברצונך למחוק חשבונית זו?</p>
                                             <div class="clearfix">
                                                 <button onclick="document.getElementById('id01').style.display='none'" type="button" class="cancelbtn other">ביטול</button>
-                                                <input type="hidden" asp-for="@item.CreditID" name="id" />
-                                                <input type="submit" value="מחק" class="deletebtn other" name="creditId" />
+                                                <input type="hidden" asp-for="@item.InvoiceID" name="id" />
+                                                <input type="submit" value="מחק" class="deletebtn other" name="invoiceId" />
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                                 @Html.DisplayFor(modelItem => item.StoreName)
                             </td>
-                            <td>תוסיף משתנה קטגוריה למודל</td>
+                            <td>@Html.DisplayFor(modelItem => item.CategoryID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
                             <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
                             <td>@Html.DisplayFor(modelItem => item.Amount)</td>
                         </tr>
@@ -55,7 +57,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="4">אין לך שום זיכויים</td>
+                        <td colspan="5">אין לך שום חשבוניות</td>
                     </tr>
                 }
             }
@@ -98,7 +100,9 @@
 
 
 
-@*@model IEnumerable<invoiceProject.Models.Credit>
+
+
+@*@model IEnumerable<invoiceProject.Models.Invoice>
 
     @{
         ViewData["Title"] = "Index";
@@ -116,7 +120,13 @@
                     @Html.DisplayNameFor(model => model.StoreName)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.PurchaseDate)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategoryID)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ExpireDate)
@@ -134,7 +144,13 @@
                     @Html.DisplayFor(modelItem => item.StoreName)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryID)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ExpireDate)
@@ -143,9 +159,9 @@
                     @Html.DisplayFor(modelItem => item.user.FirstName)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.CreditID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CreditID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CreditID">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.InvoiceID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.InvoiceID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.InvoiceID">Delete</a>
                 </td>
             </tr>
     }

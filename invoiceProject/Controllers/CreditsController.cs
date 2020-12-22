@@ -19,114 +19,128 @@ namespace invoiceProject.Controllers
         {
             _context = context;
         }
-
-        // GET: Credits
+        //----------------------------------------------------Index----------------------------------------------------
+        // GET
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> ViewCredits()
         {
-            var invoiceProjectContext = _context.Credit.Include(c => c.user);
+            var invoiceProjectContext = _context.Credit.Where(c=> c.UserID == UsersController.tempUserId)
+            .Include(c => c.user);
             return View(await invoiceProjectContext.ToListAsync());
         }
+        //----------------------------------------------------Details----------------------------------------------------
+        // GET
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // GET: Credits/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //    var credit = await _context.Credit
+        //        .Include(c => c.user)
+        //        .FirstOrDefaultAsync(m => m.CreditID == id);
+        //    if (credit == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var credit = await _context.Credit
-                .Include(c => c.user)
-                .FirstOrDefaultAsync(m => m.CreditID == id);
-            if (credit == null)
-            {
-                return NotFound();
-            }
-
-            return View(credit);
-        }
-
-        // GET: Credits/Create
+        //    return View(credit);
+        //}
+        //----------------------------------------------------NewCredit----------------------------------------------------
+        // GET
         [Authorize]
-        public IActionResult Create()
+        public IActionResult NewCredit()
         {
             ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName");
             return View();
         }
 
-        // POST: Credits/Create
+        // POST
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
+        public async Task<IActionResult> NewCredit([Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
         {
             if (ModelState.IsValid)
             {
-                credit.UserID = Int32.Parse(TempData["UserID"].ToString());
+                credit.UserID = UsersController.tempUserId;
+                //credit.user = _context.User.Where(u => credit.UserID == u.UserID).Include(u => u).FirstOrDefault();
+                
+                //credit.user = new User() { 
+                //    UserID=credit.UserID,
+                //    UserName=temp.UserName,
+                //    FirstName=temp.FirstName,
+                //    LastName=temp.LastName,
+                //    Email=temp.Email,
+                //    EnteranceDate=temp.EnteranceDate,
+                //    IsAdmin=temp.IsAdmin,
+                //    Password=temp.Password
+                //};
+
                 _context.Add(credit);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ViewCredits));
             }
             ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
             return View(credit);
         }
+        //----------------------------------------------------Edit----------------------------------------------------
+        // GET
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // GET: Credits/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //    var credit = await _context.Credit.FindAsync(id);
+        //    if (credit == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+        //    return View(credit);
+        //}
 
-            var credit = await _context.Credit.FindAsync(id);
-            if (credit == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-            return View(credit);
-        }
+        //// POST: Credits/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
+        //{
+        //    if (id != credit.CreditID)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // POST: Credits/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
-        {
-            if (id != credit.CreditID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(credit);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CreditExists(credit.CreditID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-            return View(credit);
-        }
-
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(credit);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!CreditExists(credit.CreditID))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+        //    return View(credit);
+        //}
+        //----------------------------------------------------Delete----------------------------------------------------
         // GET: Credits/Delete/5
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
@@ -156,7 +170,12 @@ namespace invoiceProject.Controllers
             var credit = await _context.Credit.FindAsync(id);
             _context.Credit.Remove(credit);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            //if the credit delete frome admin user:
+            if (_context.User.Where(u => u.UserID==UsersController.tempUserId).Include(u => u).FirstOrDefault().IsAdmin)
+            {
+                return RedirectToAction("AdminViewCredits","Users");
+            }
+            return RedirectToAction(nameof(ViewCredits));
         }
 
         private bool CreditExists(int id)

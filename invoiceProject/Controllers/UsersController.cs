@@ -24,50 +24,33 @@ namespace invoiceProject.Controllers
         {
             _context = context;
         }
-
-        // GET: Users
+        //----------------------------------------------------Index----------------------------------------------------
+        // GET
         public async Task<IActionResult> Index()
         {
             return View(await _context.User.ToListAsync());
         }
-
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-        // GET: Users
         //----------------------------------------------------Login----------------------------------------------------
+        // GET
         public IActionResult Login()
         {
             return View();
         }
-        // POST: Users/Login
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login(String UserName, String Password)
          {
             var user = _context.User.Where(u => u.UserName == UserName && u.Password == Password);
-            TempData["UserID"] = user.FirstOrDefault().UserID;
-            if (user.FirstOrDefault().IsAdmin)
-            {
-                SignIn(user.First());
-                return RedirectPreserveMethod(nameof(Admin));
-            }
-
+           
             if (user!=null && user.Count()>0)
             {
+                tempUserId = user.FirstOrDefault().UserID;
+                if (user.FirstOrDefault().IsAdmin)
+                {
+                    SignIn(user.First());
+                    return RedirectPreserveMethod(nameof(Admin));
+                }
                 SignIn(user.First());
                 return RedirectToAction(nameof(MyAccount));
             }
@@ -101,18 +84,15 @@ namespace invoiceProject.Controllers
                 new ClaimsPrincipal(ClaimsIdentity),
                 authProperties);
         }
-
-
-
         //----------------------------------------------------Register----------------------------------------------------
 
-        // GET: Users/Register
+        // GET
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: Users/Create
+        // POST
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -121,152 +101,62 @@ namespace invoiceProject.Controllers
         {
             if (ModelState.IsValid && !Exists(user.UserName,user.Password))
             {
+                user.EnteranceDate = DateTime.Now;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                TempData["UserID"] = user.UserID;
+                tempUserId = user.UserID;
                 SignIn(user);
                 return RedirectToAction(nameof(MyAccount));
             }
             return View();
         }
-        //----------------------------------------------------EditUser----------------------------------------------------
-
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,FirstName,LastName,UserName,Password,IsAdmin,Email,EnteranceDate")] User user)
-        {
-            if (id != user.UserID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.UserID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
+        //----------------------------------------------------MyAccount----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> MyAccount()
         {
+            var user=_context.User.Where(u => u.UserID == tempUserId).Include(u=>u);
+            if (user!=null && user.Count() > 0 && user.FirstOrDefault().IsAdmin)
+                return RedirectPreserveMethod(nameof(Admin));
             return View();
         }
+        //----------------------------------------------------ViewInvoices----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> ViewInvoices()
         {
             return View();
         }
-        //public async Task<IActionResult> ViewCredits()
-        //{
-        //    //var myCredits = await _context.User.FindAsync(tempUserId);
-        //    //if (myCredits == null)
-        //    //{
-        //    //    return NotFound();
-        //    //}
-        //    //ViewData["ProductId"] = new SelectList(_context.User, "Id", "Id", myCredits.UserID);
-        //    //ViewData["SaleId"] = new SelectList(_context.User, "Id", "Id", myCredits.UserID);
-        //    return View();
-        //}
+        //----------------------------------------------------ViewGiftCards----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> ViewGiftCards()
         {
             return View();
         }
+        //----------------------------------------------------NewGiftCard----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> NewGiftCard()
         {
             return View();
         }
+        //----------------------------------------------------NewInvoice----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> NewInvoice()
         {
             return View();
         }
-        //----------------------------------------------------NewCredit----------------------------------------------------
-        //public async Task<IActionResult> NewCredit()
-        //{
-        //    return View();
-        //}
+        //------------------------------------------------------------------------------------------------------------------
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> NewCredit(int id, [Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
-        //{
-        //    credit.UserID = tempUserId;
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(credit);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(ViewCredits));
-        //    }
-        //    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-        //    return View();
-        //}
+        //
+        //
+        //
+        //
+        //                                                    Admin
+        //                                                      |
+        //                                                      |
+        //                                                      V
+        //
+        //
+        //
+        //
         //----------------------------------------------------Admin----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> Admin()
@@ -281,7 +171,8 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewCredits()
         {
-            return View();
+            var invoiceProjectContext = _context.Credit.Include(c => c);
+            return View(await invoiceProjectContext.ToListAsync());
         }
         [Authorize]
         public async Task<IActionResult> AdminViewGiftCards()
@@ -306,22 +197,121 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewUsers()
         {
-            return View();
+            var invoiceProjectContext = _context.User.Include(u=>u);
+            return View(await invoiceProjectContext.ToListAsync());
+        }
+        //----------------------------------------------------DeleteUser----------------------------------------------------
+        // GET
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.User
+                .FirstOrDefaultAsync(m => m.UserID == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectPreserveMethod(nameof(DeleteConfirmed));
+        }
+
+        // POST
+        [HttpPost, ActionName("DeleteConfirmed")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var user = await _context.User.FindAsync(id);
+            _context.User.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(AdminViewUsers));
         }
         [Authorize]
         public async Task<IActionResult> AdminNewUser()
         {
             return View();
         }
+        //----------------------------------------------------Functions----------------------------------------------------
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.UserID == id);
         }
 
-        //the user exists by name and password
+        //If the user exists by name and password
         private bool Exists(String UserName,String Password)
         {
             return _context.User.Any(u => u.UserName == UserName && u.Password==Password);
         }
     }
 }
+//----------------------------------------------------Edit----------------------------------------------------
+// GET
+//public async Task<IActionResult> Edit(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var user = await _context.User.FindAsync(id);
+//    if (user == null)
+//    {
+//        return NotFound();
+//    }
+//    return View(user);
+//}
+
+//// POST
+//// To protect from overposting attacks, enable the specific properties you want to bind to, for 
+//// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//[HttpPost]
+//[ValidateAntiForgeryToken]
+//public async Task<IActionResult> Edit(int id, [Bind("UserID,FirstName,LastName,UserName,Password,IsAdmin,Email,EnteranceDate")] User user)
+//{
+//    if (id != user.UserID)
+//    {
+//        return NotFound();
+//    }
+
+//    if (ModelState.IsValid)
+//    {
+//        try
+//        {
+//            _context.Update(user);
+//            await _context.SaveChangesAsync();
+//        }
+//        catch (DbUpdateConcurrencyException)
+//        {
+//            if (!UserExists(user.UserID))
+//            {
+//                return NotFound();
+//            }
+//            else
+//            {
+//                throw;
+//            }
+//        }
+//        return RedirectToAction(nameof(Index));
+//    }
+//    return View(user);
+//}
+//----------------------------------------------------Details----------------------------------------------------
+//// GET
+//public async Task<IActionResult> Details(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+//    var user = await _context.User
+//        .FirstOrDefaultAsync(m => m.UserID == id);
+//    if (user == null)
+//    {
+//        return NotFound();
+//    }
+
+//    return View(user);
+//}
