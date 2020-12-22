@@ -23,6 +23,7 @@
                 <div class="md-form form-group">
                     <label asp-for="StoreName" class="">שם החנות</label>
                     <input asp-for="StoreName" type="text" id="subject" class="form-control">
+                    <span asp-validation-for="StoreName" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -31,6 +32,7 @@
                 <div class="md-form form-group">
                     <label asp-for="PurchaseDate" class="">תאריך קנייה</label>
                     <input asp-for="PurchaseDate" type="datetime-local" id="subject" class="form-control">
+                    <span asp-validation-for="PurchaseDate" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -39,6 +41,7 @@
                 <div class="md-form form-group">
                     <label asp-for="ExpireDate" class="">תוקף חשבונית</label>
                     <input asp-for="ExpireDate" type="datetime-local" id="subject" class="form-control">
+                    <span asp-validation-for="ExpireDate" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -47,6 +50,7 @@
                 <div class="md-form form-group">
                     <label asp-for="Amount" class="">סכום</label>
                     <input asp-for="Amount" type="number" id="subject" class="form-control">
+                    <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
             </div>
         </div>

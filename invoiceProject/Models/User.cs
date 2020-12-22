@@ -14,35 +14,35 @@ namespace invoiceProject.Models
         public int UserID { get; set; }
 
         [StringLength(50)]
-        [Required]
+        [Required(ErrorMessage ="חובה להזין שם פרטי")]
         [RegularExpression(@"^[A-Za-z\s]*$")]
-        [Display(Name = "First Name")]
+        [Display(Name = "שם פרטי")]
         public string FirstName { get; set; }
 
-        [Required]
-        [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "חובה להזין שם משפחה")]
+        [Display(Name = "שם משפחה")]
         [RegularExpression(@"^[A-Za-z\s]*$")]
         [StringLength(50)]
         public string LastName { get; set; }
 
-        [Required]
-        [Display(Name = "User Name")]
+        [Required(ErrorMessage = "חובה להזין שם משתמש")]
+        [Display(Name = "שם משתמש")]
         [StringLength(50)]
         [RegularExpression(@"^[A-Za-z0-9\s]*$")]
         public string UserName { get; set; }
 
-        [Display(Name = "Password")]
-        [Required]
+        [Display(Name = "סיסמה")]
+        [Required(ErrorMessage = "חובה להזין סיסמה")]
         [RegularExpression(@"^[A-Za-z0-9\s]*$")]
         public string Password { get; set; }
 
-        [Display(Name = "Admin User")]
+        [Display(Name = "Admin?")]
         public bool IsAdmin { get; set; }
 
-        [Display(Name = "Email Address")]
+        [Display(Name = "אימייל")]
         public String Email { get; set; }
 
-        [Display(Name = "Entrance Date")]
+        [Display(Name = "תאריך הצטרפות")]
         [DataType(DataType.Date)]
         public DateTime EnteranceDate { get; set; }
 

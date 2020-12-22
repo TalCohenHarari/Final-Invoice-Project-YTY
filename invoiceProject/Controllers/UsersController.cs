@@ -24,12 +24,6 @@ namespace invoiceProject.Controllers
         {
             _context = context;
         }
-        //----------------------------------------------------Index----------------------------------------------------
-        // GET
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.User.ToListAsync());
-        }
         //----------------------------------------------------Login----------------------------------------------------
         // GET
         public IActionResult Login()
@@ -171,8 +165,7 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewCredits()
         {
-            var invoiceProjectContext = _context.Credit.Include(c => c);
-            return View(await invoiceProjectContext.ToListAsync());
+            return View(await _context.Credit.ToListAsync());
         }
         [Authorize]
         public async Task<IActionResult> AdminViewGiftCards()
@@ -182,7 +175,7 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminNewInvoice()
         {
-            return View();
+            return View(await _context.Invoice.ToListAsync());
         }
         [Authorize]
         public async Task<IActionResult> AdminNewCredit()
@@ -197,8 +190,7 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewUsers()
         {
-            var invoiceProjectContext = _context.User.Include(u=>u);
-            return View(await invoiceProjectContext.ToListAsync());
+            return View(await _context.User.ToListAsync());
         }
         //----------------------------------------------------DeleteUser----------------------------------------------------
         // GET
