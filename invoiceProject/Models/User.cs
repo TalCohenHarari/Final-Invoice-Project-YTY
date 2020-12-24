@@ -40,10 +40,12 @@ namespace invoiceProject.Models
         public bool IsAdmin { get; set; }
 
         [Display(Name = "אימייל")]
+        [Required(ErrorMessage = "חובה להזין סיסמה")]
         public String Email { get; set; }
 
         [Display(Name = "תאריך הצטרפות")]
-        [DataType(DataType.Date)]
+        //[DataType(DataType.Date)]
+        [Required(ErrorMessage = "חובה להזין תאריך הצטרפות")]
         public DateTime EnteranceDate { get; set; }
 
         public ICollection<Invoice> Invoices { get; set; }

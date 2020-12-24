@@ -13,7 +13,7 @@ namespace invoiceProject.Models
         public int InvoiceID { get; set; }
         [StringLength(50)]
         [Required(ErrorMessage = "חובה להזין את שם החנות")]
-        [RegularExpression(@"^[A-Za-z0-9\s]*$")]
+        [RegularExpression(@"^[A-Za-z0-9א-ת\s]*$")]
         [Display(Name = "שם החנות")]
         public string StoreName { get; set; }
         [Required(ErrorMessage = "חובה להזין תאריך קנייה")]

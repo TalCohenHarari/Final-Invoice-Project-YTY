@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using invoiceProject.Data;
 
 namespace invoiceProject.Migrations
 {
     [DbContext(typeof(invoiceProjectContext))]
-    partial class invoiceProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20201223173733_Add_int_categoryID_for_Credit_Model")]
+    partial class Add_int_categoryID_for_Credit_Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

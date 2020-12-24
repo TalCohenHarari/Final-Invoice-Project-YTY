@@ -18,11 +18,11 @@
         <table class="table table-striped table-bordered js-sort-table customers-list">
 
             <tr class="thead-dark">
-                <th class="js-sort-string">שם החנות</th>
-                <th>קטגוריה</th>
-                <th>תאריך קנייה</th>
-                <th>תוקף חשבונית</th>
-                <th class="js-sort-number">סכום</th>
+                <th> @Html.DisplayNameFor(model => model.StoreName) </th>
+                <th> קטגוריה </th>
+                <th> @Html.DisplayNameFor(model => model.PurchaseDate) </th>
+                <th> @Html.DisplayNameFor(model => model.ExpireDate) </th>
+                <th> @Html.DisplayNameFor(model => model.Amount) </th>
             </tr>
             @{ if (Model.Count() != 0)
                 {
@@ -30,21 +30,9 @@
                     {
                         <tr>
                             <td>
-                                <span onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-trash" style=" cursor: pointer;"></i></span>
-                                <div id="id01" class="modal">
-                                    <form class="modal-content" asp-controller="Invoices" asp-action="Delete">
-                                        <div class="containerOther">
-                                            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                                            <h1 class="hrOther">מחיקת זיכוי</h1>
-                                            <p>האם את/ה בטוח/ה שברצונך למחוק חשבונית זו?</p>
-                                            <div class="clearfix">
-                                                <button onclick="document.getElementById('id01').style.display='none'" type="button" class="cancelbtn other">ביטול</button>
-                                                <input type="hidden" asp-for="@item.InvoiceID" name="id" />
-                                                <input type="submit" value="מחק" class="deletebtn other" name="invoiceId" />
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                <a asp-action="DeleteInvoice" asp-route-id="@item.InvoiceID" style="text-decoration-line: none">
+                                    <i class="fa fa-trash" style=" cursor: pointer;"></i>
+                                </a>
                                 @Html.DisplayFor(modelItem => item.StoreName)
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.CategoryID)</td>

@@ -13,7 +13,7 @@ namespace invoiceProject.Models
         public int CreditID { get; set; }
         [StringLength(50)]
         [Required(ErrorMessage = "חובה להזין את שם החנות")]
-        [RegularExpression(@"^[A-Za-z0-9\s]*$")]
+        [RegularExpression(@"^[A-Za-z0-9א-ת\s]*$")]
         [Display(Name = "שם החנות")]
         public string StoreName { get; set; }
         [Required(ErrorMessage = "חובה להזין סכום")]
@@ -22,6 +22,7 @@ namespace invoiceProject.Models
         [Required(ErrorMessage = "חובה להזין את תוקף הזיכוי")]
         [Display(Name = "תוקף זיכוי")]
         public DateTime ExpireDate { get; set; }
+        public int CategoryID { get; set; }
 
         public User user { get; set; }
     }

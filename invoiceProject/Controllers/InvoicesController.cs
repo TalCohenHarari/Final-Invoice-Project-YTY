@@ -55,10 +55,10 @@ namespace invoiceProject.Controllers
             ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
             return View(invoice);
         }
-        //----------------------------------------------------Delete----------------------------------------------------
-        // GET: invoices/Delete/5
+        //----------------------------------------------------DeleteInvoice----------------------------------------------------
+        // GET:
         [Authorize]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteInvoice(int? id)
         {
             if (id == null)
             {
@@ -73,11 +73,11 @@ namespace invoiceProject.Controllers
                 return NotFound();
             }
 
-            return RedirectPreserveMethod("DeleteConfirm");
+            return View();
         }
 
-        // POST: invoices/Delete/5
-        [HttpPost, ActionName("DeleteConfirm")]
+        // POST:
+        [HttpPost, ActionName("DeleteInvoice")]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> DeleteConfirm(int? id)
@@ -88,7 +88,7 @@ namespace invoiceProject.Controllers
             //if the credit delete frome admin user:
             if (_context.User.Where(u => u.UserID == UsersController.tempUserId).Include(u => u).FirstOrDefault().IsAdmin)
             {
-                return RedirectToAction("AdminViewCredits", "Users");
+                return RedirectToAction("AdminViewIncoices", "Users");
             }
             return RedirectToAction(nameof(ViewInvoices));
         }

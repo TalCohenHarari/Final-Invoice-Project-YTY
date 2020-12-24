@@ -1,0 +1,71 @@
+﻿@model invoiceProject.Models.Credit
+@{ ViewData["Title"] = "מחיקת זיכוי";
+    Layout = "_UserLayout"; }
+@section css {
+    <link href="@Url.Content("~/css/DeleteButton.css")" rel="stylesheet" />
+}
+<div style="margin:auto;" class="col-6">
+    <form style="text-align:center; margin-bottom: 15%;" asp-controller="Credits" asp-action="DeleteCredit">
+        <h1 style="font-size:xx-large" class="hrOther">מחיקת זיכוי</h1>
+        <p style="font-size:x-large">האם את/ה בטוח/ה שברצונך למחוק זיכוי זה?</p>
+        <div class="clearfix" style="margin-left:9%">
+            <a style="text-decoration-line:none; width:44%; color:black" asp-action="AdminViewUsers" class="cancelbtn other">ביטול</a>
+            <input type="hidden" asp-for="CreditID" />
+            <input style="width:44%" type="submit" value="מחק" class="deletebtn other" />
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<h1>Delete</h1>
+
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Credit</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StoreName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StoreName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Amount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Amount)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ExpireDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ExpireDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.user)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.user.FirstName)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="CreditID" />
+            <input type="submit" value="Delete" class="icon-remove-sign" /> |
+            <a asp-action="Index">Back to List</a>
+        </form>
+    </div>*@
