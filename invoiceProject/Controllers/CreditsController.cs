@@ -103,6 +103,60 @@ namespace invoiceProject.Controllers
             }
             return RedirectToAction(nameof(ViewCredits));
         }
+        //----------------------------------------------------EditCredit----------------------------------------------------
+        // GET
+        [Authorize]
+        public async Task<IActionResult> EditCredit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var credit = await _context.Credit.FindAsync(id);
+            if (credit == null)
+            {
+                return NotFound();
+            }
+            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+            return View(credit);
+        }
+
+        // POST:
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCredit(int id, [Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
+        {
+            if (id != credit.CreditID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(credit);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CreditExists(credit.CreditID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(ViewCredits));
+            }
+            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+            return View(credit);
+        }
+        //----------------------------------------------------Functions----------------------------------------------------
 
         private bool CreditExists(int id)
         {
@@ -110,59 +164,7 @@ namespace invoiceProject.Controllers
         }
     }
 }
-//----------------------------------------------------Edit----------------------------------------------------
-// GET
-//public async Task<IActionResult> Edit(int? id)
-//{
-//    if (id == null)
-//    {
-//        return NotFound();
-//    }
 
-//    var credit = await _context.Credit.FindAsync(id);
-//    if (credit == null)
-//    {
-//        return NotFound();
-//    }
-//    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-//    return View(credit);
-//}
-
-//// POST: Credits/Edit/5
-//// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-//// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-//[HttpPost]
-//[ValidateAntiForgeryToken]
-//public async Task<IActionResult> Edit(int id, [Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
-//{
-//    if (id != credit.CreditID)
-//    {
-//        return NotFound();
-//    }
-
-//    if (ModelState.IsValid)
-//    {
-//        try
-//        {
-//            _context.Update(credit);
-//            await _context.SaveChangesAsync();
-//        }
-//        catch (DbUpdateConcurrencyException)
-//        {
-//            if (!CreditExists(credit.CreditID))
-//            {
-//                return NotFound();
-//            }
-//            else
-//            {
-//                throw;
-//            }
-//        }
-//        return RedirectToAction(nameof(Index));
-//    }
-//    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-//    return View(credit);
-//}
 //----------------------------------------------------Details----------------------------------------------------
 // GET
 //public async Task<IActionResult> Details(int? id)

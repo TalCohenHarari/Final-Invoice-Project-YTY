@@ -92,7 +92,59 @@ namespace invoiceProject.Controllers
             }
             return RedirectToAction(nameof(ViewInvoices));
         }
+        //----------------------------------------------------EditInvoice----------------------------------------------------
+        // GET
+        [Authorize]
+        public async Task<IActionResult> EditInvoice(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var invoice = await _context.Invoice.FindAsync(id);
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
+            return View(invoice);
+        }
+
+        // POST:
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditInvoice(int id, [Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
+        {
+            if (id != invoice.InvoiceID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(invoice);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!InvoiceExists(invoice.InvoiceID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(ViewInvoices));
+            }
+            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
+            return View(invoice);
+        }
         private bool InvoiceExists(int id)
         {
             return _context.Invoice.Any(e => e.InvoiceID == id);
@@ -154,58 +206,7 @@ namespace invoiceProject.Controllers
 //    return View(invoice);
 //}
 
-//// GET: Invoices/Edit/5
-//public async Task<IActionResult> Edit(int? id)
-//{
-//    if (id == null)
-//    {
-//        return NotFound();
-//    }
 
-//    var invoice = await _context.Invoice.FindAsync(id);
-//    if (invoice == null)
-//    {
-//        return NotFound();
-//    }
-//    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
-//    return View(invoice);
-//}
-
-//// POST: Invoices/Edit/5
-//// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-//// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-//[HttpPost]
-//[ValidateAntiForgeryToken]
-//public async Task<IActionResult> Edit(int id, [Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
-//{
-//    if (id != invoice.InvoiceID)
-//    {
-//        return NotFound();
-//    }
-
-//    if (ModelState.IsValid)
-//    {
-//        try
-//        {
-//            _context.Update(invoice);
-//            await _context.SaveChangesAsync();
-//        }
-//        catch (DbUpdateConcurrencyException)
-//        {
-//            if (!InvoiceExists(invoice.InvoiceID))
-//            {
-//                return NotFound();
-//            }
-//            else
-//            {
-//                throw;
-//            }
-//        }
-//        return RedirectToAction(nameof(Index));
-//    }
-//    ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
-//    return View(invoice);
-//}
 
 //// GET: Invoices/Delete/5
 //public async Task<IActionResult> Delete(int? id)

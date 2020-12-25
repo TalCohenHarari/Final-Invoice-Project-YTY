@@ -20,7 +20,6 @@
             <tr class="thead-dark">
                 <th style="background-color: black !important"> מספר הלקוח </th>
                 <th style="background-color: black !important"> שם החנות </th>
-                <th style="background-color: black !important"> קטגוריה </th>
                 <th style="background-color: black !important"> תוקף גיפט-קארד </th>
                 <th style="background-color: black !important"> סכום </th>
             </tr>
@@ -36,7 +35,6 @@
                                 @Html.DisplayFor(modelItem => item.GiftCardID) שנה לת.ז של המשתמש
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.GiftCardName)</td>
-                            <td>נשים מהמודל קטגוריה או מחרוזת במודל זה</td>
                             <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
                             <td>תברר אם להשים מחיר במודל הזה@*@Html.DisplayFor(modelItem => item.price)*@</td>
                         </tr>
@@ -45,7 +43,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="5">אין גיפט-קארדים במערכת</td>
+                        <td colspan="4">אין גיפט-קארדים במערכת</td>
                     </tr>
                 }
             }

@@ -91,7 +91,7 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserID,FirstName,LastName,UserName,Password,IsAdmin,Email,EnteranceDate")] User user)
         {
-            if (ModelState.IsValid && !Exists(user.UserName,user.Password))
+            if (ModelState.IsValid && !Exists(user.UserName))
             {
                 user.EnteranceDate = DateTime.Now;
                 _context.Add(user);
@@ -167,7 +167,7 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminNewUser([Bind("UserID,FirstName,LastName,UserName,Password,IsAdmin,Email,EnteranceDate")] User user)
         {
-            if (ModelState.IsValid && !Exists(user.UserName, user.Password))
+            if (ModelState.IsValid && !Exists(user.UserName))
             {
                 //user.EnteranceDate = DateTime.Now;
                 _context.Add(user);
@@ -231,11 +231,10 @@ namespace invoiceProject.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AdminNewGiftCard(int UserID, string GiftCardName, DateTime ExpireDate, double price)
+        public async Task<IActionResult> AdminNewGiftCard([Bind("GiftCardName,ExpireDate")] GiftCard giftCard, int UserID, double price)
         {
             if (ModelState.IsValid)
             {
-                var giftCard = new GiftCard() { GiftCardName = GiftCardName, ExpireDate= ExpireDate };
                 _context.GiftCard.Add(giftCard);
                 await _context.SaveChangesAsync();
 
@@ -385,10 +384,10 @@ namespace invoiceProject.Controllers
             return _context.User.Any(e => e.UserID == id);
         }
 
-        //If the user exists by name and password
-        private bool Exists(String UserName,String Password)
+        //If the user exists by UserName
+        private bool Exists(String UserName)
         {
-            return _context.User.Any(u => u.UserName == UserName && u.Password==Password);
+            return _context.User.Any(u => u.UserName == UserName);
         }
     }
 }

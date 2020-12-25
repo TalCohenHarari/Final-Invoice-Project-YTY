@@ -1,0 +1,100 @@
+﻿@model invoiceProject.Models.GiftCard
+@{
+    ViewData["Title"] = "עריכת גיפט-קארד";
+    Layout = "_UserLayout";
+}
+@section css {
+    <link href="@Url.Content("~/css/NewInvoice.css")" rel="stylesheet" />
+}
+
+
+<div id="mainDiv" class="row">
+    <div class="col-1"></div>
+    <form id="contact-form" name="contact-form" class="MyForm" asp-action="EditGiftCard">
+        <input type="hidden" asp-for="GiftCardID" />
+        <div class="row">
+            <h2 class="h1-responsive font-weight-bold text-center my-4 col-4" style="padding-right: 13px; text-align: right !important;">
+                ערוך גיפט-קארד
+            </h2>
+            <span class="col-4"></span>
+            <a class="col-4" asp-action="ViewGiftCards" style="text-decoration-line:none; font-weight:bold; padding: 3% 10% 0 0;">
+                <span style="font-weight:bold; padding-top:8%;">חזרה לצפייה בגיפט-קארדים</span>
+            </a>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form form-group">
+                    <label asp-for="GiftCardName" class="">תוקף חשבונית</label>
+                    <input asp-for="GiftCardName" type="text" id="subject" class="form-control">
+                    <span asp-validation-for="GiftCardName" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form form-group">
+                    <label asp-for="ExpireDate" class="">תוקף חשבונית</label>
+                    <input asp-for="ExpireDate" type="datetime-local" id="subject" class="form-control">
+                    <span asp-validation-for="ExpireDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form form-group">
+                    <label  class="">סכום</label>
+                    <input  type="number" name="price" id="subject" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input class="btn btn-primary btn-block sendButton " type="submit" value="שמור" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+
+
+
+@*@model invoiceProject.Models.GiftCard
+
+    @{
+        ViewData["Title"] = "Edit";
+    }
+
+    <h1>Edit</h1>
+
+    <h4>GiftCard</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="GiftCardID" />
+                <div class="form-group">
+                    <label asp-for="GiftCardName" class="control-label"></label>
+                    <input asp-for="GiftCardName" class="form-control" />
+                    <span asp-validation-for="GiftCardName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@

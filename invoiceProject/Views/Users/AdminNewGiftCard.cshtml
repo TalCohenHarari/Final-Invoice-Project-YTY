@@ -33,7 +33,7 @@
                     <div class="col-md-12">
                         <div class="md-form form-group">
                             <label asp-for="giftCard.GiftCardName" class="">שם החנות</label>
-                            <select asp-for="giftCard.GiftCardName" class="form-control" name="GiftCardName">
+                            <select asp-for="giftCard.GiftCardName" class="form-control">
                                 @*<option></option>*@
                                 <option value="ZARA">ZARA</option>
                                 <option value="H&M">H&M</option>
@@ -51,7 +51,7 @@
             <div class="col-md-12">
                 <div class="md-form form-group">
                     <label asp-for="giftCard.ExpireDate" class="">תוקף גיפט-קארד</label>
-                    <input asp-for="giftCard.ExpireDate" type="datetime" id="subject" class="form-control">
+                    <input asp-for="giftCard.ExpireDate" type="datetime-local" id="subject" class="form-control">
                     <span asp-validation-for="giftCard.ExpireDate" class="text-danger"></span>
                 </div>
             </div>
