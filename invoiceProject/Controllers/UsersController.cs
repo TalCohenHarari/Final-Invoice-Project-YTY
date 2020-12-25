@@ -106,6 +106,14 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> MyAccount()
         {
+            var list = _context.Invoice.Where(u=>u.UserID==tempUserId).Select(u => u.Amount).ToList();
+            int sum = 0;
+            foreach (var item in list)
+                sum += Int32.Parse(item.ToString());
+            ViewBag.MoneySumOfAllInvoices = sum;
+
+            ViewBag.AmountOfAllInvoices = _context.Invoice.Where(u => u.UserID == tempUserId).Count();
+
             var user=_context.User.Where(u => u.UserID == tempUserId).Include(u=>u);
             if (user!=null && user.Count() > 0 && user.FirstOrDefault().IsAdmin)
                 return RedirectPreserveMethod(nameof(Admin));
@@ -129,6 +137,9 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> Admin()
         {
+            ViewBag.AdminAmountOfAllInvoices = _context.Invoice.Count();
+            ViewBag.AdminAmountOfAllUsers = _context.User.Count();
+
             return View();
         }
         //----------------------------------------------------AdminViewUsers----------------------------------------------------
