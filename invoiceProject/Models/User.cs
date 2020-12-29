@@ -9,38 +9,37 @@ namespace invoiceProject.Models
 {
     public class User
     {
-
-        
+        [Display(Name = "חובה להזין את מספר הלקוח")]
         public int UserID { get; set; }
 
         [StringLength(50)]
         [Required(ErrorMessage ="חובה להזין שם פרטי")]
-        [RegularExpression(@"^[A-Za-z\s]*$")]
+        [RegularExpression(@"^[A-Za-zא-ת\s]*$")]
         [Display(Name = "שם פרטי")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "חובה להזין שם משפחה")]
         [Display(Name = "שם משפחה")]
-        [RegularExpression(@"^[A-Za-z\s]*$")]
+        [RegularExpression(@"^[A-Za-zא-ת\s]*$")]
         [StringLength(50)]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "חובה להזין שם משתמש")]
         [Display(Name = "שם משתמש")]
         [StringLength(50)]
-        [RegularExpression(@"^[A-Za-z0-9\s]*$")]
+        [RegularExpression(@"^[A-Za-z0-9א-ת\s]*$")]
         public string UserName { get; set; }
 
         [Display(Name = "סיסמה")]
         [Required(ErrorMessage = "חובה להזין סיסמה")]
-        [RegularExpression(@"^[A-Za-z0-9\s]*$")]
+        [RegularExpression(@"^[A-Za-z0-9א-ת\s]*$")]
         public string Password { get; set; }
 
-        [Display(Name = "Admin?")]
+        [Display(Name = "אדמין")]
         public bool IsAdmin { get; set; }
 
         [Display(Name = "אימייל")]
-        [Required(ErrorMessage = "חובה להזין סיסמה")]
+        [Required(ErrorMessage = "חובה להזין אימייל")]
         public String Email { get; set; }
 
         [Display(Name = "תאריך הצטרפות")]

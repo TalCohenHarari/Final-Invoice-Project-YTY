@@ -8,17 +8,19 @@ namespace invoiceProject.Models
 {
     public class UserGiftCard
     {
+        [Display(Name = "מספר הלקוח")]
         public int UserID { get; set; }
 
         public User user { get; set; }
 
+        [Display(Name = "מספר הגיפט-קארד")]
         public int GiftCardID { get; set; }
 
         public GiftCard giftCard { get; set; }
 
-        [Required(ErrorMessage = "חובה להזין סכום")]
-        [Display(Name = "סכום")]
-        public double price { get; set; }
+        
+        [Display(Name = "כמות")]
+        public int Count { get; set; }
 
 
     }

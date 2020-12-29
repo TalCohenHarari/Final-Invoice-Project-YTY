@@ -19,9 +19,21 @@
 
 
         <!-- Login Form -->
-        <form asp-controller="Users" asp-action="Login">
-            <input asp-for="UserName" type="text" id="login" class="fadeIn second" name="userName" placeholder="שם משתמש">
-            <input asp-for="Password" type="password" id="password" class="fadeIn third" name="password" placeholder="סיסמה">
+        <form asp-action="Login">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <input asp-for="UserName" type="text" id="login" class="fadeIn second" placeholder="שם משתמש" />
+                </div>
+                <span asp-validation-for="UserName" class="text-danger" style="padding-right:36%;"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input asp-for="Password" type="password" id="password" class="fadeIn third" placeholder="סיסמה" />
+                </div>
+                <span asp-validation-for="Password" class="text-danger" style="padding-right:36%;"></span>
+            </div>
+
             <input type="submit" class="fadeIn fourth" value="התחבר">
         </form>
 
@@ -32,3 +44,7 @@
 
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

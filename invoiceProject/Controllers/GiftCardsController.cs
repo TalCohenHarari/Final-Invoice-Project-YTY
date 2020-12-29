@@ -24,20 +24,8 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> ViewGiftCards()
         {
-
-            //ViewBag.price = (from userGiftCard in _context.UserGiftCard
-            //                 join giftcard in _context.GiftCard
-            //                 on userGiftCard.GiftCardID equals giftcard.GiftCardID
-            //                 where userGiftCard.UserID == UsersController.tempUserId
-            //                 select userGiftCard).FirstOrDefault().price;
-
-            var GiftCardList = from userGiftCard in _context.UserGiftCard
-                               join giftCard in _context.GiftCard
-                               on userGiftCard.GiftCardID equals giftCard.GiftCardID 
-                               where userGiftCard.UserID==UsersController.tempUserId
-                               select giftCard;
-
-            return View(await GiftCardList.ToListAsync());
+            return View(await _context.UserGiftCard.Where(ugc=>ugc.UserID==UsersController.tempUserId)
+                .Include(g=>g.giftCard).ToListAsync());
         }
         //----------------------------------------------------NewGiftCard----------------------------------------------------
         // GET:
@@ -51,26 +39,29 @@ namespace invoiceProject.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> NewGiftCard([Bind("GiftCardName,ExpireDate")] GiftCard giftCard,double price)
+        public async Task<IActionResult> NewGiftCard(string GiftCardName, double Price)
         {
-            if (ModelState.IsValid)
-            {
-                _context.GiftCard.Add(giftCard);
-                await _context.SaveChangesAsync();
-
+            
                 var user = _context.User.Where(u => u.UserID == UsersController.tempUserId).Select(u => u).FirstOrDefault();
-                
-                var userGiftCard =new UserGiftCard() { 
-                    GiftCardID=giftCard.GiftCardID,
-                    UserID= user.UserID,
-                    price= price
-                };
-                _context.UserGiftCard.Add(userGiftCard);
-                await _context.SaveChangesAsync();
 
+                var giftCard = _context.GiftCard.Where(g => g.GiftCardName== GiftCardName && g.Price==Price)
+                    .Select(u => u).FirstOrDefault();
+
+                if (!GiftCardExists(user.UserID , GiftCardName , Price))
+                {
+                    var userGiftCard = new UserGiftCard() {
+                        Count = 1,
+                        UserID=user.UserID,
+                        GiftCardID=giftCard.GiftCardID,
+                    };
+                     _context.UserGiftCard.Add(userGiftCard);
+                }
+                else
+                {
+                    _context.UserGiftCard.Where(u => u.UserID == user.UserID).FirstOrDefault().Count++;
+                }
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ViewGiftCards));
-            }
-            return View();
         }
         //----------------------------------------------------DeleteGiftCard----------------------------------------------------
         // GET:
@@ -82,9 +73,9 @@ namespace invoiceProject.Controllers
                 return NotFound();
             }
 
-            var giftCard = await _context.GiftCard
-                .FirstOrDefaultAsync(m => m.GiftCardID == id);
-            if (giftCard == null)
+            var userGiftCard = await _context.UserGiftCard
+                .Where(g => g.GiftCardID == id && g.UserID==UsersController.tempUserId).FirstOrDefaultAsync();
+            if (userGiftCard == null)
             {
                 return NotFound();
             }
@@ -98,11 +89,21 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var giftCard = await _context.GiftCard.FindAsync(id);
-            _context.GiftCard.Remove(giftCard);
+            var userGiftCard = await _context.UserGiftCard.
+                Where(g => g.GiftCardID == id && g.UserID == UsersController.tempUserId).FirstOrDefaultAsync();
+
+            if (userGiftCard.Count == 1)
+            {
+                _context.UserGiftCard.Remove(userGiftCard);
+            }
+            else
+            {
+                userGiftCard.Count--;
+            }
             await _context.SaveChangesAsync();
+
             //if the credit delete frome admin user:
-            if (_context.User.Where(u => u.UserID == UsersController.tempUserId).Include(u => u).FirstOrDefault().IsAdmin)
+            if (_context.User.Where(u => u.UserID == UsersController.tempUserId).Select(u => u).FirstOrDefault().IsAdmin)
             {
                 return RedirectToAction("AdminViewGiftCards", "Users");
             }
@@ -119,56 +120,81 @@ namespace invoiceProject.Controllers
                 return NotFound();
             }
 
-            var giftCard = await _context.GiftCard.FindAsync(id);
-            if (giftCard == null)
+            var userGiftCard = await _context.UserGiftCard.Where(ugc=>ugc.UserID==UsersController.tempUserId
+            && ugc.GiftCardID==id).Select(ugc=>ugc).FirstOrDefaultAsync();
+
+            if (userGiftCard == null)
             {
                 return NotFound();
             }
-            return View(giftCard);
+            return View(userGiftCard);
         }
 
         //POST:
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditGiftCard(int id, [Bind("GiftCardID,GiftCardName,ExpireDate")] GiftCard giftCard,double price)
+        public async Task<IActionResult> EditGiftCard(int id, string GiftCardName, double Price)
         {
+            //The exist giftCard:
+            var userGiftCard = await _context.UserGiftCard.Where(g => g.GiftCardID == id && g.UserID==UsersController.tempUserId)
+                .Select(g=>g).FirstOrDefaultAsync();
 
-            if (id != giftCard.GiftCardID)
-            {
-                return NotFound();
-            }
+            //The wanted giftCard:
+            var wantedGiftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price).
+            Select(g => g).FirstOrDefault();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    (from userGiftCard in _context.UserGiftCard
-                     where  giftCard.GiftCardID == userGiftCard.GiftCardID
-                     select userGiftCard).First().price = price;
-
-                    _context.Update(giftCard);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GiftCardExists(giftCard.GiftCardID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+            //If the user make "edit" with the same deatails:
+            if (userGiftCard.GiftCardID == wantedGiftCard.GiftCardID)
                 return RedirectToAction(nameof(ViewGiftCards));
+
+            //If the user make "edit" with others deatails:
+            else
+            {
+                //Delete the old wrong giftCard:
+                if (userGiftCard.Count > 1)
+                {
+                    userGiftCard.Count--;
+                    _context.Update(userGiftCard);
+                }
+                else
+                {
+                    _context.UserGiftCard.Remove(userGiftCard);
+                }
+
+                //Creating the new giftCard and we have 2 options:
+                // 1. If the user has this giftCard already we will update the count:
+                if (GiftCardExists(UsersController.tempUserId, GiftCardName, Price))
+                {
+                    var ugc= _context.UserGiftCard.Where(ugc => ugc.UserID == UsersController.tempUserId 
+                    && ugc.GiftCardID== wantedGiftCard.GiftCardID).Select(ugc => ugc).FirstOrDefault();
+
+                    ugc.Count++;
+                    _context.Update(ugc);
+
+                }
+                // 2. If the user doesn't have this giftCard we will creat a new one:
+                else
+                {
+                    var newUserGiftCard = new UserGiftCard()
+                    {
+                        Count = 1,
+                        UserID = UsersController.tempUserId,
+                        GiftCardID = wantedGiftCard.GiftCardID,
+                    };
+                    _context.UserGiftCard.Add(newUserGiftCard);
+                }
             }
-            return View(giftCard);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ViewGiftCards));
         }
 
-        private bool GiftCardExists(int id)
+        private bool GiftCardExists(int UserID,string GiftCardName,double Price)
         {
-            return _context.GiftCard.Any(e => e.GiftCardID == id);
+            var giftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price).
+                Select(g => g).FirstOrDefault();
+            return _context.UserGiftCard.Any(ugc => ugc.GiftCardID == giftCard.GiftCardID && ugc.UserID==UserID);
+            
         }
     }
 }

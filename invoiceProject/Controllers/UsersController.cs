@@ -152,19 +152,19 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewInvoices()
         {
-            return View(await _context.Invoice.ToListAsync());
+            return View(await _context.Invoice.Include(u => u.user).ToListAsync());
         }
         //----------------------------------------------------AdminViewCredits----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> AdminViewCredits()
         {
-            return View(await _context.Credit.ToListAsync());
+            return View(await _context.Credit.Include(u=>u.user).ToListAsync());
         }
         //----------------------------------------------------AdminViewGiftCards----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> AdminViewGiftCards()
         {
-            return View(await _context.GiftCard.ToListAsync());
+            return View(await _context.UserGiftCard.Include(g=>g.giftCard).Include(u=>u.user).ToListAsync());
         }
         //----------------------------------------------------AdminNewUser----------------------------------------------------
         //GET
@@ -242,27 +242,30 @@ namespace invoiceProject.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AdminNewGiftCard([Bind("GiftCardName,ExpireDate")] GiftCard giftCard, int UserID, double price)
+        public async Task<IActionResult> AdminNewGiftCard( int UserID, string GiftCardName, double Price)
         {
-            if (ModelState.IsValid)
+            var user = _context.User.Where(u => u.UserID == UserID).Select(u => u).FirstOrDefault();
+
+            var giftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price)
+                .Select(u => u).FirstOrDefault();
+
+            if (!GiftCardExists(user.UserID, GiftCardName, Price))
             {
-                _context.GiftCard.Add(giftCard);
-                await _context.SaveChangesAsync();
-
-                var user = _context.User.Where(u => u.UserID == UserID).Select(u => u).FirstOrDefault();
-
                 var userGiftCard = new UserGiftCard()
                 {
-                    GiftCardID = giftCard.GiftCardID,
+                    Count = 1,
                     UserID = user.UserID,
-                    price = price
+                    GiftCardID = giftCard.GiftCardID,
                 };
-                _context.UserGiftCard.Add(userGiftCard);
-                await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(AdminViewGiftCards));
+                _context.UserGiftCard.Add(userGiftCard);
             }
-            return View();
+            else
+            {
+                _context.UserGiftCard.Where(u => u.UserID == user.UserID).FirstOrDefault().Count++;
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(AdminViewGiftCards));
         }
         //----------------------------------------------------AdminDeleteUser----------------------------------------------------
         // GET
@@ -361,16 +364,16 @@ namespace invoiceProject.Controllers
         //----------------------------------------------------AdminDeleteGiftCard----------------------------------------------------
         // GET
         [Authorize]
-        public async Task<IActionResult> AdminDeleteGiftCard(int? id)
+        public async Task<IActionResult> AdminDeleteGiftCard(int? userID,int? giftCardID)
         {
-            if (id == null)
+            if (userID == null && giftCardID==null)
             {
                 return NotFound();
             }
 
-            var giftCard = await _context.GiftCard
-                .FirstOrDefaultAsync(m => m.GiftCardID == id);
-            if (giftCard == null)
+            var userGiftCard = await _context.UserGiftCard
+                .FirstOrDefaultAsync(g => g.GiftCardID == giftCardID && g.UserID == userID);
+            if (userGiftCard == null)
             {
                 return NotFound();
             }
@@ -382,11 +385,12 @@ namespace invoiceProject.Controllers
         [Authorize]
         [HttpPost, ActionName("AdminDeleteGiftCard")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmd(int id)
+        public async Task<IActionResult> DeleteConfirmd(int userID, int giftCardID)
         {
-            var giftCard = await _context.GiftCard.FindAsync(id);
-            _context.GiftCard.Remove(giftCard);
+            var userGiftCard = await _context.UserGiftCard.FindAsync(userID, giftCardID);
+            _context.UserGiftCard.Remove(userGiftCard);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(AdminViewGiftCards));
         }
         //----------------------------------------------------Functions----------------------------------------------------
@@ -395,10 +399,18 @@ namespace invoiceProject.Controllers
             return _context.User.Any(e => e.UserID == id);
         }
 
-        //If the user exists by UserName
+        //If the user exists by UserName:
         private bool Exists(String UserName)
         {
             return _context.User.Any(u => u.UserName == UserName);
+        }
+        //If the GiftCard exists:
+        private bool GiftCardExists(int UserID, string GiftCardName, double Price)
+        {
+            var giftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price).
+                Select(g => g).FirstOrDefault();
+            return _context.UserGiftCard.Any(ugc => ugc.GiftCardID == giftCard.GiftCardID && ugc.UserID==UserID);
+
         }
     }
 }

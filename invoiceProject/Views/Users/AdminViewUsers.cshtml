@@ -41,10 +41,10 @@
                 }
                 else
                 {
-                <tr>
-                    <td colspan="5">אין משתמשים באתר</td>
-                </tr>
-                 } }
+                    <tr>
+                        <td colspan="5">אין משתמשים באתר</td>
+                    </tr>
+                } }
         </table>
     </div>
 </div>
@@ -52,4 +52,6 @@
     <script src="~/js/sort-table.min.js"></script>
     <script src="~/js/searchBoxFilter.js"></script>
     @*<script src="~/js/Sort_Tables.js"></script>*@
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }

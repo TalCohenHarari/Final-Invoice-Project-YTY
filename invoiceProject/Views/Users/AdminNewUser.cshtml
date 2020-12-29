@@ -55,13 +55,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="md-form  form-group">
-                    <label asp-for="EnteranceDate" for="subject" class="">תאריך הצטרפות</label> 
-                    <input asp-for="EnteranceDate"  type="date" id="subject" class="form-control">
+                    <label asp-for="EnteranceDate" for="subject" class="">תאריך הצטרפות</label>
+                    <input asp-for="EnteranceDate" type="date" id="subject" class="form-control">
                     <span asp-validation-for="EnteranceDate" class="text-danger"></span>
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-md-12">
                 <div class="md-form  form-group">
@@ -78,3 +78,6 @@
 
     </form>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

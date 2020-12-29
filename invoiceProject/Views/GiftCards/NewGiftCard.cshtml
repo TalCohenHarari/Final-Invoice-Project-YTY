@@ -23,14 +23,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="md-form form-group">
-                            <label asp-for="giftCard.GiftCardName" class="">שם החנות</label>
-                            <select asp-for="giftCard.GiftCardName" class="form-control">
-                                @*<option></option>*@
-                                <option value="ZARA">ZARA</option>
-                                <option value="H&M">H&M</option>
-                                <option value="NIKE">NIKE</option>
-                                <option value="ADIDAS">ADIDAS</option>
-                                <option value="TOMMY">TOMMY</option>
+                            <label asp-for="giftCard.GiftCardName" class="">סוג הגיפט-קארד</label>
+                            <select asp-for="giftCard.GiftCardName" name="GiftCardName" class="form-control">
+                                <option value="DreamCard">DreamCard</option>
+                                <option value="BuyMe">BuyMe</option>
                             </select>
                             <span asp-validation-for="giftCard.GiftCardName" class="text-danger"></span>
                         </div>
@@ -40,19 +36,18 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="md-form form-group">
-                    <label asp-for="giftCard.ExpireDate" class="">תוקף גיפט-קארד</label>
-                    <input asp-for="giftCard.ExpireDate" type="datetime-local" id="subject" class="form-control">
-                    <span asp-validation-for="giftCard.ExpireDate" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="md-form form-group">
-                    <label asp-for="price" class="">סכום</label>
-                    <input asp-for="price" type="number" id="subject" class="form-control">
-                    <span asp-validation-for="price" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form form-group">
+                            <label asp-for="giftCard.Price" class="">סכום</label>
+                            <select asp-for="giftCard.Price" name="Price" class="form-control">
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                            </select>
+                            <span asp-validation-for="giftCard.Price" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
