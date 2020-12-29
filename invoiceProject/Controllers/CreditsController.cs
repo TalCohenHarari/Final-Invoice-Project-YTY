@@ -43,6 +43,7 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> NewCredit([Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
         {
+
             if (ModelState.IsValid)
             {
                 credit.UserID = UsersController.tempUserId;

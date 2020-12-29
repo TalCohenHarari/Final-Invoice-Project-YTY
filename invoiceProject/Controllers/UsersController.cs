@@ -198,12 +198,27 @@ namespace invoiceProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> AdminNewInvoice([Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
+        public async Task<IActionResult> AdminNewInvoice([Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice,string radio)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(invoice);
+
+                //If radio=="1" creat a new Credit too:
+                if (radio == "1")
+                {
+                    Credit newCredit = new Credit();
+                    newCredit.StoreName = invoice.StoreName;
+                    newCredit.CategoryID = invoice.CategoryID;
+                    newCredit.ExpireDate = invoice.ExpireDate;
+                    newCredit.Amount = invoice.Amount;
+                    newCredit.UserID = invoice.UserID;
+
+                    _context.Credit.Add(newCredit);
+                }
+
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(AdminViewInvoices));
             }
             ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
