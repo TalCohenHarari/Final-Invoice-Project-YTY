@@ -32,6 +32,7 @@ namespace invoiceProject
                     options.UseSqlServer(Configuration.GetConnectionString("invoiceProjectContext")));
 
             //----------------------------------------------------------------------------------------------------//
+            //לכמה דקות אנחנו רוצים שהשרת ישמור את המידע פר משתמש:
             services.AddSession(options => options.IdleTimeout=TimeSpan.FromMinutes(10));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             //----------------------------------------------------------------------------------------------------//

@@ -47,6 +47,10 @@
             </div>
 
             <input type="submit" class="fadeIn fourth" value="הרשמה">
+            @if (ViewData["RegisterError"] != null)
+            {
+                <div style="color:red; margin-bottom:7%;">@ViewData["RegisterError"]</div>
+            }
         </form>
 
         <!-- Remind Passowrd -->

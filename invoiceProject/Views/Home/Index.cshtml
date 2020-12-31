@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http;
+
+@{
     ViewData["Title"] = "עמוד הבית";
 }
 @section css {
@@ -6,27 +8,38 @@
 }
 
 
-    <div class="headerMiddle">
+<div class="headerMiddle">
 
-        <div class="text-center ">
-            <div class=" d-none d-lg-block">
-                <img class="icon" src="./images/icon.png" alt="">
-            </div>
+    <div class="text-center ">
+        <div class=" d-none d-lg-block">
+            <img class="icon" src="./images/icon.png" alt="">
+        </div>
 
-            <br /><br /><br />
-            <h1 class="firstline">מהיום לא רודפים יותר אחרי חשבוניות</h1>
+        <br /><br /><br />
+        <h1 class="firstline">מהיום לא רודפים יותר אחרי חשבוניות</h1>
 
-            <br />
-            <h2 class="secline">
-                הצטרפו עכשיו לעולם מסודר יותר, כאן תמצאו את ארנק החשבוניות הדיגטלי מכל
-                מקום!
-            </h2>
-            <br /><br /><br />
+        <br />
+        <h2 class="secline">
+            הצטרפו עכשיו לעולם מסודר יותר, כאן תמצאו את ארנק החשבוניות הדיגטלי מכל
+            מקום!
+        </h2>
+        <br /><br /><br />
+        @if (Context.Session.GetString("Logged") == null)
+        {
             <div style="padding-bottom:100px;">
                 <a class="headerbtn" type="button" asp-controller="Users" asp-action="Register" style="text-decoration-line:none">
                     להצטרפות
                 </a>
             </div>
-        </div>
+        }
+        else
+        {
+
+            <h2 class="secline" style="font-weight:bold;">
+                תודה שהצטרפת אלינו   @Context.User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value
+            </h2>
+            <br /><br /><br />
+        }
     </div>
+</div>
 

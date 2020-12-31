@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+<!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
     <meta charset="utf-8" />
@@ -13,7 +15,7 @@
     @RenderSection("css", false)
 </head>
 <body>
-   
+
     <header class="header">
         <div class="navrow">
             <nav class="navbar navbar-expand-lg navbar-light">
@@ -50,29 +52,39 @@
                     </ul>
                 </div>
 
-                <div class="d-none d-lg-block">
-                    <button type="button" class="loginButton btn btn-primary"
-                            onclick="location.href='@Url.Action("Login", "Users")'">
-                        התחברות
-                    </button>
+                @if (Context.Session.GetString("Logged") == null)
+                {
+                    <div class="d-none d-lg-block">
+                        <button type="button" class="loginButton btn btn-primary"
+                                onclick="location.href='@Url.Action("Login", "Users")'">
+                            התחברות
+                        </button>
 
+                        <button type="button" class="loginButton btn btn-primary"
+                                onclick="window.location.href='@Url.Action("Register", "Users")'">
+                            הרשמה
+                        </button>
+                    </div>
+                }
+                else
+                {
                     <button type="button" class="loginButton btn btn-primary"
-                            onclick="window.location.href='@Url.Action("Register", "Users")'">
-                        הרשמה
+                            onclick="location.href='@Url.Action("Logout", "Users")'">
+                        התנתק
                     </button>
-                </div>
+                }
 
             </nav>
 
         </div>
     </header>
-        <div>
-            @RenderBody()
-        </div>
+    <div>
+        @RenderBody()
+    </div>
 
-       
 
-    
+
+
 
 
     <!-- Footer -->
@@ -110,12 +122,15 @@
                         <p>
                             <a asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
                         </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Register">הרשמה</a>
-                        </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Login">התחברות</a>
-                        </p>
+                        @if (Context.Session.GetString("Logged") == null)
+                        {
+                            <p>
+                                <a asp-controller="Users" asp-action="Register">הרשמה</a>
+                            </p>
+                            <p>
+                                <a asp-controller="Users" asp-action="Login">התחברות</a>
+                            </p>
+                        }
                     </div>
                 </div>
                 <div class="col-md-6 mt-md-0 mt-3">

@@ -19,64 +19,10 @@ namespace invoiceProject.Controllers
     public class UsersController : Controller
     {
         private readonly invoiceProjectContext _context;
-        public static int tempUserId;
+        //public static int tempUserId;
         public UsersController(invoiceProjectContext context)
         {
             _context = context;
-        }
-        //----------------------------------------------------Login----------------------------------------------------
-        // GET
-        public IActionResult Login()
-        {
-            return View();
-        }
-        // POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Login(String UserName, String Password)
-         {
-            var user = _context.User.Where(u => u.UserName == UserName && u.Password == Password);
-           
-            if (user!=null && user.Count()>0)
-            {
-                tempUserId = user.FirstOrDefault().UserID;
-                if (user.FirstOrDefault().IsAdmin)
-                {
-                    SignIn(user.First());
-                    return RedirectPreserveMethod(nameof(Admin));
-                }
-                SignIn(user.First());
-                return RedirectToAction(nameof(MyAccount));
-            }
-             return View();
-         }
-        //----------------------------------------------------Logout----------------------------------------------------
-        public IActionResult Logout()
-        {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(Login));
-        }
-        //----------------------------------------------------Session----------------------------------------------------
-        private async void SignIn(User user)
-        {
-            //HttpContext.Session.SetString("Logged","1");
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name , user.UserName),
-                new Claim("FullName",user.FirstName+" " + user.LastName),
-                new Claim(ClaimTypes.Role, user.IsAdmin.ToString()),
-            };
-
-            var ClaimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties { /*ExpiresUtc=DateTimeOffset.UtcNow.AddMinutes(10)*/};
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(ClaimsIdentity),
-                authProperties);
         }
         //----------------------------------------------------Register----------------------------------------------------
 
@@ -96,27 +42,102 @@ namespace invoiceProject.Controllers
                 user.EnteranceDate = DateTime.Now;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                tempUserId = user.UserID;
+
+                HttpContext.Session.SetString("Logged", user.UserID.ToString());
                 SignIn(user);
                 return RedirectToAction(nameof(MyAccount));
             }
+            else
+            {
+                ViewData["RegisterError"] = "משתמש זה כבר קיים במערכת";
+            }
             return View();
         }
+        //----------------------------------------------------Login----------------------------------------------------
+        // GET
+        public IActionResult Login()
+        {
+            return View();
+        }
+        // POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(String UserName, String Password)
+        {
+            var user = _context.User.Where(u => u.UserName == UserName && u.Password == Password).Select(u=>u);
+
+            if (user != null && user.Count() > 0)
+            {
+                HttpContext.Session.SetString("Logged",user.FirstOrDefault().UserID.ToString());
+
+                if (user.FirstOrDefault().IsAdmin)
+                {
+                    SignIn(user.First());
+                    return RedirectPreserveMethod(nameof(Admin));
+                }
+                SignIn(user.First());
+                return RedirectToAction(nameof(MyAccount));
+            }
+            else
+            {
+                ViewData["LoginError"] = "השם משתמש או הסיסמה אינם נכונים";
+            }
+            return View();
+         }
+        //----------------------------------------------------SignIn----------------------------------------------------
+        private async void SignIn(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name , user.UserName),
+                new Claim("FullName",user.FirstName+" " + user.LastName),
+                new Claim(ClaimTypes.Role, user.IsAdmin.ToString()),
+            };
+
+            var ClaimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties { /*ExpiresUtc=DateTimeOffset.UtcNow.AddMinutes(10)*/};
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(ClaimsIdentity),
+                authProperties);
+        }
+        //----------------------------------------------------Logout----------------------------------------------------
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("Logged");
+
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Login));
+        }
         //----------------------------------------------------MyAccount----------------------------------------------------
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> MyAccount()
         {
-            var list = _context.Invoice.Where(u=>u.UserID==tempUserId).Select(u => u.Amount).ToList();
+            if (HttpContext.Session.GetString("Logged") == null)
+                return RedirectToAction(nameof(Login));
+            //Now we sum all the invoices money that current user have, and show him it:
+            var list = _context.Invoice.Where(u=>u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
+                .Select(u => u.Amount).ToList();
+
             int sum = 0;
             foreach (var item in list)
                 sum += Int32.Parse(item.ToString());
             ViewBag.MoneySumOfAllInvoices = sum;
 
-            ViewBag.AmountOfAllInvoices = _context.Invoice.Where(u => u.UserID == tempUserId).Count();
+            //Now we count all the invoices that current user have, and show him it:
+            ViewBag.AmountOfAllInvoices = _context.Invoice.
+                Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).Count();
 
-            var user=_context.User.Where(u => u.UserID == tempUserId).Include(u=>u);
+            var user=_context.User.
+                Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).Include(u=>u);
+
+            //If it's the Admin:
             if (user!=null && user.Count() > 0 && user.FirstOrDefault().IsAdmin)
                 return RedirectPreserveMethod(nameof(Admin));
+
             return View();
         }
         //------------------------------------------------------------------------------------------------------------------

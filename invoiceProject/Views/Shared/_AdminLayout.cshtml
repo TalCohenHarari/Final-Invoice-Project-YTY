@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+<!DOCTYPE html>
 <html dir="rtl" lang="he">
 
 <head>
@@ -78,9 +80,9 @@
                     </button>
 
                     @*<button type="button" class="loginButton btn btn-primary"
-                            onclick="window.location.href='@Url.Action("Register", "Users")'">
-                        הרשמה
-                    </button>*@
+                                onclick="window.location.href='@Url.Action("Register", "Users")'">
+                            הרשמה
+                        </button>*@
                 </div>
 
             </nav>
@@ -238,12 +240,16 @@
                         <p>
                             <a asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
                         </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Register">הרשמה</a>
-                        </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Login">התחברות</a>
-                        </p>
+                        @if (Context.Session.GetString("Logged") == null)
+                        {
+                            <p>
+                                <a asp-controller="Users" asp-action="Register">הרשמה</a>
+                            </p>
+                            <p>
+                                <a asp-controller="Users" asp-action="Login">התחברות</a>
+                            </p>
+                        }
+
                     </div>
                 </div>
                 <div class="col-md-6 mt-md-0 mt-3">

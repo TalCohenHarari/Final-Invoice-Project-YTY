@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+<!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
     <meta charset="utf-8" />
@@ -49,18 +51,27 @@
                             <!--END just in mobile-->
                         </ul>
                     </div>
+                    @if (Context.Session.GetString("Logged") == null)
+                    {
+                        <div class="d-none d-lg-block">
+                            <button type="button" class="loginButton btn btn-primary"
+                                    onclick="location.href='@Url.Action("Login", "Users")'">
+                                התחברות
+                            </button>
 
-                    <div class="d-none d-lg-block">
+                            <button type="button" class="loginButton btn btn-primary"
+                                    onclick="window.location.href='@Url.Action("Register", "Users")'">
+                                הרשמה
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
                         <button type="button" class="loginButton btn btn-primary"
-                                onclick="location.href='@Url.Action("Login", "Users")'" >
-                            התחברות
+                                onclick="location.href='@Url.Action("Logout", "Users")'">
+                            התנתק
                         </button>
-
-                        <button type="button" class="loginButton btn btn-primary"
-                                onclick="window.location.href='@Url.Action("Register", "Users")'">
-                            הרשמה
-                        </button>
-                    </div>
+                    }
 
                 </nav>
 
@@ -70,7 +81,7 @@
             @RenderBody()
         </div>
 
-       
+
 
     </div>
 
@@ -110,12 +121,15 @@
                         <p>
                             <a asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
                         </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Register">הרשמה</a>
-                        </p>
+                        @if (Context.Session.GetString("Logged") == null)
+                        {
+                            <p>
+                                <a asp-controller="Users" asp-action="Register">הרשמה</a>
+                            </p>
                         <p>
                             <a asp-controller="Users" asp-action="Login">התחברות</a>
                         </p>
+                        }
                     </div>
                 </div>
                 <div class="col-md-6 mt-md-0 mt-3">

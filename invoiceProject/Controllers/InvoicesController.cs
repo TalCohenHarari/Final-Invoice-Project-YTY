@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using invoiceProject.Data;
 using invoiceProject.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace invoiceProject.Controllers
 {
@@ -24,7 +25,7 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> ViewInvoices()
         {
-            var invoiceProjectContext = _context.Invoice.Where(c => c.UserID == UsersController.tempUserId)
+            var invoiceProjectContext = _context.Invoice.Where(c => c.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
             .Include(c => c.user);
             return View(await invoiceProjectContext.ToListAsync());
         }
@@ -48,7 +49,7 @@ namespace invoiceProject.Controllers
             if (ModelState.IsValid)
             {
                 //Creat a new invoice:
-                invoice.UserID = UsersController.tempUserId;
+                invoice.UserID = Int32.Parse(HttpContext.Session.GetString("Logged"));
                 _context.Add(invoice);
 
                 //If radio=="1" creat a new Credit too:
@@ -59,7 +60,7 @@ namespace invoiceProject.Controllers
                     newCredit.CategoryID = invoice.CategoryID;
                     newCredit.ExpireDate = invoice.ExpireDate;
                     newCredit.Amount = invoice.Amount;
-                    newCredit.UserID = UsersController.tempUserId;
+                    newCredit.UserID = Int32.Parse(HttpContext.Session.GetString("Logged"));
 
                     _context.Credit.Add(newCredit);
                 }
@@ -101,7 +102,8 @@ namespace invoiceProject.Controllers
             _context.Invoice.Remove(invoice);
             await _context.SaveChangesAsync();
             //if the credit delete frome admin user:
-            if (_context.User.Where(u => u.UserID == UsersController.tempUserId).Include(u => u).FirstOrDefault().IsAdmin)
+            if (_context.User.Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).
+                Include(u => u).FirstOrDefault().IsAdmin)
             {
                 return RedirectToAction("AdminViewIncoices", "Users");
             }

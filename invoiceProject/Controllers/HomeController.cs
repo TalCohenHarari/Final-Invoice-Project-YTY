@@ -9,26 +9,20 @@ namespace invoiceProject.Controllers
 {
     public class HomeController : Controller
     {
-        //GET
+        
         public IActionResult Index() 
-        { 
+        {
+            //if (HttpContext.Session.GetString("Logged") != null)
             //{
-            //    if (HttpContext.Session.GetString("Logged") != null)
-            //    {
-            //        return View();
-            //    }
-            //    return RedirectToAction("Login","Users");
+            //    return RedirectToAction("MyAccount", "Users");
+            //}
             return View();
         }
+        //GET
         public IActionResult ContactUs()
         {
             return View();
         }
-        //POST
-        //public IActionResult ContactUs()
-        //{
-        //    return View();
-        //}
         public IActionResult AboutUs()
         {
             return View();

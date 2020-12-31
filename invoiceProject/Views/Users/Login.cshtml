@@ -33,8 +33,11 @@
                 </div>
                 <span asp-validation-for="Password" class="text-danger" style="padding-right:36%;"></span>
             </div>
-
             <input type="submit" class="fadeIn fourth" value="התחבר">
+            @if (ViewData["LoginError"] != null)
+            {
+                <div style="color:red; margin-bottom:7%;">@ViewData["LoginError"]</div>
+            }
         </form>
 
         <!-- Remind Passowrd

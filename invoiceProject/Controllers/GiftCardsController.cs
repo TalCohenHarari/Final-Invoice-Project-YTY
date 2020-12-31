@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using invoiceProject.Data;
 using invoiceProject.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+
 
 namespace invoiceProject.Controllers
 {
@@ -24,7 +26,8 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> ViewGiftCards()
         {
-            return View(await _context.UserGiftCard.Where(ugc=>ugc.UserID==UsersController.tempUserId)
+            return View(await _context.UserGiftCard.
+                Where(ugc=>ugc.UserID== Int32.Parse(HttpContext.Session.GetString("Logged")))
                 .Include(g=>g.giftCard).ToListAsync());
         }
         //----------------------------------------------------NewGiftCard----------------------------------------------------
@@ -42,7 +45,8 @@ namespace invoiceProject.Controllers
         public async Task<IActionResult> NewGiftCard(string GiftCardName, double Price)
         {
             
-                var user = _context.User.Where(u => u.UserID == UsersController.tempUserId).Select(u => u).FirstOrDefault();
+                var user = _context.User.
+                    Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).Select(u => u).FirstOrDefault();
 
                 var giftCard = _context.GiftCard.Where(g => g.GiftCardName== GiftCardName && g.Price==Price)
                     .Select(u => u).FirstOrDefault();
@@ -74,7 +78,8 @@ namespace invoiceProject.Controllers
             }
 
             var userGiftCard = await _context.UserGiftCard
-                .Where(g => g.GiftCardID == id && g.UserID==UsersController.tempUserId).FirstOrDefaultAsync();
+                .Where(g => g.GiftCardID == id && g.UserID== Int32.Parse(HttpContext.Session.GetString("Logged")))
+                .FirstOrDefaultAsync();
             if (userGiftCard == null)
             {
                 return NotFound();
@@ -90,7 +95,8 @@ namespace invoiceProject.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var userGiftCard = await _context.UserGiftCard.
-                Where(g => g.GiftCardID == id && g.UserID == UsersController.tempUserId).FirstOrDefaultAsync();
+                Where(g => g.GiftCardID == id && g.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
+                .FirstOrDefaultAsync();
 
             if (userGiftCard.Count == 1)
             {
@@ -103,7 +109,8 @@ namespace invoiceProject.Controllers
             await _context.SaveChangesAsync();
 
             //if the credit delete frome admin user:
-            if (_context.User.Where(u => u.UserID == UsersController.tempUserId).Select(u => u).FirstOrDefault().IsAdmin)
+            if (_context.User.Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).
+                Select(u => u).FirstOrDefault().IsAdmin)
             {
                 return RedirectToAction("AdminViewGiftCards", "Users");
             }
@@ -120,8 +127,9 @@ namespace invoiceProject.Controllers
                 return NotFound();
             }
 
-            var userGiftCard = await _context.UserGiftCard.Where(ugc=>ugc.UserID==UsersController.tempUserId
-            && ugc.GiftCardID==id).Select(ugc=>ugc).FirstOrDefaultAsync();
+            var userGiftCard = await _context.UserGiftCard.
+                Where(ugc=>ugc.UserID== Int32.Parse(HttpContext.Session.GetString("Logged")) && ugc.GiftCardID==id)
+                .Select(ugc=>ugc).FirstOrDefaultAsync();
 
             if (userGiftCard == null)
             {
@@ -137,7 +145,8 @@ namespace invoiceProject.Controllers
         public async Task<IActionResult> EditGiftCard(int id, string GiftCardName, double Price)
         {
             //The exist giftCard:
-            var userGiftCard = await _context.UserGiftCard.Where(g => g.GiftCardID == id && g.UserID==UsersController.tempUserId)
+            var userGiftCard = await _context.UserGiftCard.
+                Where(g => g.GiftCardID == id && g.UserID== Int32.Parse(HttpContext.Session.GetString("Logged")))
                 .Select(g=>g).FirstOrDefaultAsync();
 
             //The wanted giftCard:
@@ -164,9 +173,9 @@ namespace invoiceProject.Controllers
 
                 //Creating the new giftCard and we have 2 options:
                 // 1. If the user has this giftCard already we will update the count:
-                if (GiftCardExists(UsersController.tempUserId, GiftCardName, Price))
+                if (GiftCardExists(Int32.Parse(HttpContext.Session.GetString("Logged")), GiftCardName, Price))
                 {
-                    var ugc= _context.UserGiftCard.Where(ugc => ugc.UserID == UsersController.tempUserId 
+                    var ugc= _context.UserGiftCard.Where(ugc => ugc.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))
                     && ugc.GiftCardID== wantedGiftCard.GiftCardID).Select(ugc => ugc).FirstOrDefault();
 
                     ugc.Count++;
@@ -179,7 +188,7 @@ namespace invoiceProject.Controllers
                     var newUserGiftCard = new UserGiftCard()
                     {
                         Count = 1,
-                        UserID = UsersController.tempUserId,
+                        UserID = Int32.Parse(HttpContext.Session.GetString("Logged")),
                         GiftCardID = wantedGiftCard.GiftCardID,
                     };
                     _context.UserGiftCard.Add(newUserGiftCard);

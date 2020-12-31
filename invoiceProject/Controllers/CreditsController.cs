@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using invoiceProject.Data;
 using invoiceProject.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+
 
 namespace invoiceProject.Controllers
 {
@@ -24,7 +26,8 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> ViewCredits()
         {
-            var invoiceProjectContext = _context.Credit.Where(c=> c.UserID == UsersController.tempUserId)
+            var invoiceProjectContext = _context.Credit.
+                Where(c=> c.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
             .Include(c => c.user);
             return View(await invoiceProjectContext.ToListAsync());
         }
@@ -46,19 +49,7 @@ namespace invoiceProject.Controllers
 
             if (ModelState.IsValid)
             {
-                credit.UserID = UsersController.tempUserId;
-                //credit.user = _context.User.Where(u => credit.UserID == u.UserID).Include(u => u).FirstOrDefault();
-                
-                //credit.user = new User() { 
-                //    UserID=credit.UserID,
-                //    UserName=temp.UserName,
-                //    FirstName=temp.FirstName,
-                //    LastName=temp.LastName,
-                //    Email=temp.Email,
-                //    EnteranceDate=temp.EnteranceDate,
-                //    IsAdmin=temp.IsAdmin,
-                //    Password=temp.Password
-                //};
+                credit.UserID = Int32.Parse(HttpContext.Session.GetString("Logged"));
 
                 _context.Add(credit);
                 await _context.SaveChangesAsync();
@@ -98,7 +89,8 @@ namespace invoiceProject.Controllers
             _context.Credit.Remove(credit);
             await _context.SaveChangesAsync();
             //if the credit delete frome admin user:
-            if (_context.User.Where(u => u.UserID==UsersController.tempUserId).Include(u => u).FirstOrDefault().IsAdmin)
+            if (_context.User.Where(u => u.UserID== Int32.Parse(HttpContext.Session.GetString("Logged")))
+                .Include(u => u).FirstOrDefault().IsAdmin)
             {
                 return RedirectToAction("AdminViewCredits","Users");
             }

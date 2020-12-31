@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+<!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
     <meta charset="utf-8" />
@@ -26,13 +28,13 @@
             </div>
             <div class="col-1">
                 <button class="btn "
-                    onclick="location.href='@Url.Action("Login", "Users")'">
+                        onclick="location.href='@Url.Action("Login", "Users")'">
                     <i class="fa fa-user fa-lg"></i>
                 </button>
             </div>
             <div class="col-1  offset-6">
                 <button class="btn "
-                    onclick="location.href='@Url.Action("Index", "Home")'">
+                        onclick="location.href='@Url.Action("Index", "Home")'">
                     <i class="fa fa-home fa-lg"></i>
                 </button>
             </div>
@@ -71,14 +73,14 @@
 
                 <div class="d-none d-lg-block">
                     <button type="button" class="loginButton btn btn-primary"
-                           onclick="location.href='@Url.Action("Logout", "Users")'">
+                            onclick="location.href='@Url.Action("Logout", "Users")'">
                         התנתק
                     </button>
 
                     @*<button type="button" class="loginButton btn btn-primary"
-                         onclick="window.location.href='@Url.Action("Register", "Users")'">
-                        הרשמה
-                    </button>*@
+                             onclick="window.location.href='@Url.Action("Register", "Users")'">
+                            הרשמה
+                        </button>*@
                 </div>
 
             </nav>
@@ -96,7 +98,7 @@
                     <div class="sidebar-brand-icon rotate-n-15">
                         <i class="fas fa-laugh-wink"></i>
                     </div>
-                    <div class="sidebar-brand-text mx-3">שלום @Context.User.Claims.FirstOrDefault(c=>c.Type== "FullName")?.Value</div>
+                    <div class="sidebar-brand-text mx-3">שלום @Context.User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value</div>
                 </div>
 
                 <!-- Divider -->
@@ -143,7 +145,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link"  asp-controller="Credits" asp-action="NewCredit">
+                    <a class="nav-link" asp-controller="Credits" asp-action="NewCredit">
                         <i class="fas fa-fw fa-chart-area"></i>
                         <span>הוספת זיכוי</span>
                     </a>
@@ -160,14 +162,14 @@
 
                 <!-- Incoices -->
                 <li class="nav-item">
-                    <a class="nav-link"  asp-controller="GiftCards" asp-action="ViewGiftCards">
+                    <a class="nav-link" asp-controller="GiftCards" asp-action="ViewGiftCards">
                         <i class="fas fa-fw fa-chart-area"></i>
                         <span>צפייה בגיפט-קארדים</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link"  asp-controller="GiftCards" asp-action="NewGiftCard">
+                    <a class="nav-link" asp-controller="GiftCards" asp-action="NewGiftCard">
                         <i class="fas fa-fw fa-chart-area"></i>
                         <span>הוספת גיפט-קארד</span>
                     </a>
@@ -218,12 +220,15 @@
                         <p>
                             <a asp-controller="Users" asp-action="MyAccount">החשבון שלי</a>
                         </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Register">הרשמה</a>
-                        </p>
-                        <p>
-                            <a asp-controller="Users" asp-action="Login">התחברות</a>
-                        </p>
+                        @if (Context.Session.GetString("Logged") == null)
+                        {
+                            <p>
+                                <a asp-controller="Users" asp-action="Register">הרשמה</a>
+                            </p>
+                            <p>
+                                <a asp-controller="Users" asp-action="Login">התחברות</a>
+                            </p>
+                        }
                     </div>
                 </div>
                 <div class="col-md-6 mt-md-0 mt-3">
@@ -251,9 +256,6 @@
     </footer>
 
     <!-- Footer -->
-
-
-
     <!-- jQuery and JS bundle w/ Popper.js -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
