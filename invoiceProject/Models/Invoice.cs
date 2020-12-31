@@ -30,8 +30,8 @@ namespace invoiceProject.Models
         [Display(Name = "קטגוריה")]
         public int CategoryID { get; set; }
 
-        [Required(ErrorMessage = "חובה להזין את תוקף החשבונית")]
-        [Display(Name = "תוקף חשבונית")]
+        [Required(ErrorMessage = "חובה להזין את תוקף האחריות")]
+        [Display(Name = "תוקף אחריות")]
         public DateTime ExpireDate { get; set; }
 
         public User user { get; set; }

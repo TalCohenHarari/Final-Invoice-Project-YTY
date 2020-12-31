@@ -44,26 +44,12 @@ namespace invoiceProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> NewInvoice([Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice, string radio)
+        public async Task<IActionResult> NewInvoice([Bind("InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
         {
-            if (ModelState.IsValid)
+            if (invoice!=null)
             {
-                //Creat a new invoice:
                 invoice.UserID = Int32.Parse(HttpContext.Session.GetString("Logged"));
                 _context.Add(invoice);
-
-                //If radio=="1" creat a new Credit too:
-                if (radio == "1")
-                {
-                    Credit newCredit = new Credit();
-                    newCredit.StoreName = invoice.StoreName;
-                    newCredit.CategoryID = invoice.CategoryID;
-                    newCredit.ExpireDate = invoice.ExpireDate;
-                    newCredit.Amount = invoice.Amount;
-                    newCredit.UserID = Int32.Parse(HttpContext.Session.GetString("Logged"));
-
-                    _context.Credit.Add(newCredit);
-                }
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ViewInvoices));

@@ -21,7 +21,9 @@
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.UserID) </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.user.UserName) </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.giftCard.GiftCardName) </th>
-                <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.giftCard.Price) </th>
+                <th class="js-sort-number" style="background-color: black !important">
+                    @Html.DisplayNameFor(model => model.giftCard.Price) 
+                </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.Count) </th>
             </tr>
             @{ if (Model.Count() != 0)

@@ -122,9 +122,9 @@ namespace invoiceProject.Controllers
             var list = _context.Invoice.Where(u=>u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
                 .Select(u => u.Amount).ToList();
 
-            int sum = 0;
+            long sum = 0;
             foreach (var item in list)
-                sum += Int32.Parse(item.ToString());
+                sum += long.Parse(item.ToString());
             ViewBag.MoneySumOfAllInvoices = sum;
 
             //Now we count all the invoices that current user have, and show him it:
@@ -219,25 +219,11 @@ namespace invoiceProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> AdminNewInvoice([Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice,string radio)
+        public async Task<IActionResult> AdminNewInvoice([Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
         {
-            if (ModelState.IsValid)
+            if (invoice!=null)
             {
                 _context.Add(invoice);
-
-                //If radio=="1" creat a new Credit too:
-                if (radio == "1")
-                {
-                    Credit newCredit = new Credit();
-                    newCredit.StoreName = invoice.StoreName;
-                    newCredit.CategoryID = invoice.CategoryID;
-                    newCredit.ExpireDate = invoice.ExpireDate;
-                    newCredit.Amount = invoice.Amount;
-                    newCredit.UserID = invoice.UserID;
-
-                    _context.Credit.Add(newCredit);
-                }
-
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(AdminViewInvoices));

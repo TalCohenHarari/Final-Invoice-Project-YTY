@@ -23,7 +23,11 @@
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.StoreName) </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.CategoryID) </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.PurchaseDate) </th>
-                <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.Amount) </th>
+                <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.ExpireDate) </th>
+
+                <th class="js-sort-number" style="background-color: black !important">
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
             </tr>
             @{ if (Model.Count() != 0)
                 {
@@ -40,6 +44,14 @@
                             <td>@Html.DisplayFor(modelItem => item.StoreName)</td>
                             <td>תוסיף משתנה קטגוריה למודל</td>
                             <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
+                            @if (item.ExpireDate.ToString() != "01/01/0001 00:00:00")
+                            {
+                                <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
+                            }
+                            else
+                            {
+                                <td>אין אחריות </td>
+                            }
                             <td>@Html.DisplayFor(modelItem => item.Amount)</td>
                         </tr>
                     }
@@ -47,7 +59,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="6">אין חשבוניות במערכת</td>
+                        <td colspan="7">אין חשבוניות במערכת</td>
                     </tr>
                 }
             }

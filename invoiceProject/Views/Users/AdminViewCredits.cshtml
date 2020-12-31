@@ -23,7 +23,9 @@
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.StoreName) </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.CategoryID) </th>
                 <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.ExpireDate) </th>
-                <th style="background-color: black !important"> @Html.DisplayNameFor(model => model.Amount) </th>
+                <th class="js-sort-number" style="background-color: black !important"> 
+                    @Html.DisplayNameFor(model => model.Amount) 
+                </th>
             </tr>
             @{ if (Model.Count() != 0)
                 {
