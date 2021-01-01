@@ -116,12 +116,21 @@ namespace invoiceProject.Controllers
         //[Authorize]
         public async Task<IActionResult> MyAccount()
         {
+            //If someone click on "myAccount" link and he isn't logged in it's redirect him to login page:
             if (HttpContext.Session.GetString("Logged") == null)
                 return RedirectToAction(nameof(Login));
+
+            //Statistic calculate of pie chart:
+            ViewBag.Food = calculateMoney("מזון") + 1;
+            ViewBag.Clothes = calculateMoney("ביגוד והנעלה") + 1;
+            ViewBag.ElectricPower = calculateMoney("חשמל") + 1;
+            ViewBag.Fuel = calculateMoney("דלק") + 1;
+            ViewBag.insurance = calculateMoney("ביטוח") + 1;
+           
+         
             //Now we sum all the invoices money that current user have, and show him it:
             var list = _context.Invoice.Where(u=>u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
                 .Select(u => u.Amount).ToList();
-
             long sum = 0;
             foreach (var item in list)
                 sum += long.Parse(item.ToString());
@@ -131,14 +140,26 @@ namespace invoiceProject.Controllers
             ViewBag.AmountOfAllInvoices = _context.Invoice.
                 Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).Count();
 
-            var user=_context.User.
-                Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).Include(u=>u);
-
             //If it's the Admin:
+            var user =_context.User.
+                Where(u => u.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))).Include(u=>u);
             if (user!=null && user.Count() > 0 && user.FirstOrDefault().IsAdmin)
                 return RedirectPreserveMethod(nameof(Admin));
 
             return View();
+        }
+        //Calculate all the money according to the specific category:
+        public double calculateMoney(string categoryName)
+        {
+            var food = (from i in _context.Invoice
+                        where i.CategoryID.ToString() == categoryName
+                        select i).ToList();
+
+            double sumCategory = 0;
+            foreach (var item in food)
+                sumCategory += item.Amount;
+
+            return sumCategory;
         }
         //------------------------------------------------------------------------------------------------------------------
         //

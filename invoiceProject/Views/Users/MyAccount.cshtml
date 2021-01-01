@@ -1,7 +1,7 @@
-﻿@{ 
+﻿@{
     ViewData["Title"] = "Index";
     Layout = "_UserLayout";
- }
+}
 
 
 <!-- Content Wrapper -->
@@ -90,7 +90,8 @@
                         <!-- Card Body -->
                         <div class="card-body">
                             <div class="chart-pie pt-4 pb-2">
-                                <canvas id="myPieChart"></canvas>
+                                @*<canvas id="_myPieChart"></canvas>*@
+                                <div id="chartContainer" style="height: 100%; width: 100%;"></div>
                             </div>
                             <div class="mt-4 text-center small">
                                 <span class="mr-2">
@@ -101,6 +102,12 @@
                                 </span>
                                 <span class="mr-2">
                                     <i class="fas fa-circle text-info"></i> ביגוד
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-info" style="color:#ff60fc !important;"></i> דלק
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-info" style="color:#f5eb03 !important;"></i> ביטוח
                                 </span>
                             </div>
                         </div>
@@ -121,3 +128,41 @@
 </div>
 
 <!-- End of Content Wrapper -->
+@section scripts{
+
+    <!-----Statistic PieChart----->
+    <script>
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title: {
+                   /* text: "Email Categories",*/
+                    //horizontalAlign: "left"
+                },
+                data: [{
+                    type: "doughnut",
+                    startAngle: 60,
+                    //innerRadius: 60,
+                    indexLabelFontSize: 17,
+                    indexLabel: "{label} - #percent%",
+                    toolTipContent: "<b>{label}: ₪</b> {y}  (#percent%)",
+                    dataPoints: [
+                        { y: @ViewBag.Food, label: "מזון", color: '#4e73df'},
+                        { y: @ViewBag.Clothes, label: "חשמל", color: '#1cc88a' },
+                        { y: @ViewBag.ElectricPower, label: "ביגוד", color: '#36b9cc' },
+                        { y: @ViewBag.Fuel, label: "דלק", color: '#ff60fc' },
+                        { y: @ViewBag.insurance, label: "ביטוח", color: '#f5eb03' }
+                    ]
+                }]
+            });
+            chart.render();
+
+        }
+    </script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+    <!-----Statistic AreaChart----->
+    
+
+}
