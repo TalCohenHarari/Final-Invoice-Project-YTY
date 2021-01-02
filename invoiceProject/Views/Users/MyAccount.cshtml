@@ -73,7 +73,8 @@
                         <!-- Card Body -->
                         <div class="card-body">
                             <div class="chart-area">
-                                <canvas id="myAreaChart"></canvas>
+                                @*<canvas id="myAreaChart"></canvas>*@
+                                <div id="chartContainerGraph" style="height: 100%; width: 100%;"></div>
                             </div>
                         </div>
                     </div>
@@ -129,10 +130,12 @@
 
 <!-- End of Content Wrapper -->
 @section scripts{
-
-    <!-----Statistic PieChart----->
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+ 
     <script>
         window.onload = function () {
+
+            //--------Statistic PieChart--------
 
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
@@ -143,7 +146,7 @@
                 data: [{
                     type: "doughnut",
                     startAngle: 60,
-                    //innerRadius: 60,
+                    innerRadius: 60,
                     indexLabelFontSize: 17,
                     indexLabel: "{label} - #percent%",
                     toolTipContent: "<b>{label}: ₪</b> {y}  (#percent%)",
@@ -158,11 +161,38 @@
             });
             chart.render();
 
+            //-------- Statistic splineArea--------
+
+             var chart2 = new CanvasJS.Chart("chartContainerGraph", {
+                animationEnabled: true,
+                title: {
+                    //text: "Company Revenue by Year"
+                },
+                axisY: { // what we will see in y line.
+                    //title: "Revenue in USD",
+                    valueFormatString: "#0",
+                    //suffix: "k",
+                    prefix: "₪ "
+                },
+                axisX: {    // what we will see in x line.
+                    valueFormatString: "MMMM"
+                },
+                data: [{
+                    type: "splineArea", // type of the statistic show.
+                    color: "rgba(54,158,173,.7)",
+                    markerSize: 5,  //size of the points in the graph.
+                    xValueFormatString: "10 MMMM", //what we will see in x when we points on the current point.
+                    yValueFormatString: "₪ #,##0.##", //like in xValueFormatString.
+                    dataPoints: [
+                        { x: new Date(2020, 0, 10), y: @ViewBag.January },
+                        { x: new Date(2020, 3, 10), y: @ViewBag.April },
+                        { x: new Date(2020, 7, 10), y: @ViewBag.August },
+                        { x: new Date(2020, 11, 10), y: @ViewBag.December }
+                    ]
+                }]
+            });
+            chart2.render();
+
         }
     </script>
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
-    <!-----Statistic AreaChart----->
-    
-
 }

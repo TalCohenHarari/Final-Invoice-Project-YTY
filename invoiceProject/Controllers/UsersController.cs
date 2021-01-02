@@ -65,7 +65,7 @@ namespace invoiceProject.Controllers
         public IActionResult Login(String UserName, String Password)
         {
             var user = _context.User.Where(u => u.UserName == UserName && u.Password == Password).Select(u=>u);
-
+            
             if (user != null && user.Count() > 0)
             {
                 HttpContext.Session.SetString("Logged",user.FirstOrDefault().UserID.ToString());
@@ -73,7 +73,7 @@ namespace invoiceProject.Controllers
                 if (user.FirstOrDefault().IsAdmin)
                 {
                     SignIn(user.First());
-                    return RedirectPreserveMethod(nameof(Admin));
+                    return RedirectToAction(nameof(Admin));
                 }
                 SignIn(user.First());
                 return RedirectToAction(nameof(MyAccount));
@@ -120,12 +120,18 @@ namespace invoiceProject.Controllers
             if (HttpContext.Session.GetString("Logged") == null)
                 return RedirectToAction(nameof(Login));
 
-            //Statistic calculate of pie chart:
-            ViewBag.Food = calculateMoney("מזון") + 1;
-            ViewBag.Clothes = calculateMoney("ביגוד והנעלה") + 1;
-            ViewBag.ElectricPower = calculateMoney("חשמל") + 1;
-            ViewBag.Fuel = calculateMoney("דלק") + 1;
-            ViewBag.insurance = calculateMoney("ביטוח") + 1;
+            //Statistic calculate of splineArea:
+            ViewBag.January = calculateMoneyPerMonth(1);
+            ViewBag.April = calculateMoneyPerMonth(4);
+            ViewBag.August = calculateMoneyPerMonth(8);
+            ViewBag.December = calculateMoneyPerMonth(12);
+
+            //Statistic calculate of doughnut:
+            ViewBag.Food = calculateMoneyPerCategory("מזון") +15;
+            ViewBag.Clothes = calculateMoneyPerCategory("ביגוד והנעלה") + 1;
+            ViewBag.ElectricPower = calculateMoneyPerCategory("חשמל") + 1;
+            ViewBag.Fuel = calculateMoneyPerCategory("דלק") + 1;
+            ViewBag.insurance = calculateMoneyPerCategory("ביטוח") + 1;
            
          
             //Now we sum all the invoices money that current user have, and show him it:
@@ -148,18 +154,30 @@ namespace invoiceProject.Controllers
 
             return View();
         }
-        //Calculate all the money according to the specific category:
-        public double calculateMoney(string categoryName)
+        //Calculating the money per month, "splineArea" type:
+        public double calculateMoneyPerMonth(int month)
         {
-            var food = (from i in _context.Invoice
-                        where i.CategoryID.ToString() == categoryName
+            var list = (from i in _context.Invoice
+                        where i.PurchaseDate.Month == month && i.UserID == Int32.Parse(HttpContext.Session.GetString("Logged"))
                         select i).ToList();
+            double money = 0;
+            foreach (var item in list)
+                money += item.Amount;
 
-            double sumCategory = 0;
-            foreach (var item in food)
-                sumCategory += item.Amount;
+            return money;
+        }
+        //Calculating all the money according to the specific category, "doughnut" type:
+        public double calculateMoneyPerCategory(string categoryName)
+        {
+            var list = (from i in _context.Invoice
+                        where i.CategoryID.ToString() == categoryName 
+                            && i.UserID== Int32.Parse(HttpContext.Session.GetString("Logged"))
+                        select i).ToList();
+            double money = 0;
+            foreach (var item in list)
+                money += item.Amount;
 
-            return sumCategory;
+            return money;
         }
         //------------------------------------------------------------------------------------------------------------------
         //
