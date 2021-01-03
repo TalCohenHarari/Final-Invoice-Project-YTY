@@ -26,7 +26,7 @@ namespace invoiceProject.Controllers
         public async Task<IActionResult> ViewInvoices()
         {
             var invoiceProjectContext = _context.Invoice.Where(c => c.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
-            .Include(c => c.user);
+            .Include(c => c.user).Include(c=>c.Category).Select(i=>i);
             return View(await invoiceProjectContext.ToListAsync());
         }
         //----------------------------------------------------Newinvoice----------------------------------------------------

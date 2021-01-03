@@ -28,7 +28,7 @@ namespace invoiceProject.Controllers
         {
             var invoiceProjectContext = _context.Credit.
                 Where(c=> c.UserID == Int32.Parse(HttpContext.Session.GetString("Logged")))
-            .Include(c => c.user);
+            .Include(u => u.user).Include(c=>c.Category).Select(c=>c);
             return View(await invoiceProjectContext.ToListAsync());
         }
         //----------------------------------------------------NewCredit----------------------------------------------------
@@ -44,7 +44,7 @@ namespace invoiceProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> NewCredit([Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
+        public async Task<IActionResult> NewCredit([Bind("UserID,CategoryID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
         {
 
             if (ModelState.IsValid)
@@ -119,7 +119,7 @@ namespace invoiceProject.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditCredit(int id, [Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
+        public async Task<IActionResult> EditCredit(int id, [Bind("UserID,CategoryID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
         {
             if (id != credit.CreditID)
             {

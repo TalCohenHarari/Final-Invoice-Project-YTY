@@ -10,5 +10,7 @@ namespace invoiceProject.Models
         public int CategoryID { get; set; }
 
         public string CategoryName { get; set; }
+        public Credit Credit { get; set; }
+        public Invoice Invoice { get; set; }
     }
 }

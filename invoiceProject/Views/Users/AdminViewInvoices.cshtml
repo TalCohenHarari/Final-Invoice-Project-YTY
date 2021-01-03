@@ -42,7 +42,7 @@
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.user.UserName)</td>
                             <td>@Html.DisplayFor(modelItem => item.StoreName)</td>
-                            <td>תוסיף משתנה קטגוריה למודל</td>
+                            <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
                             <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
                             @if (item.ExpireDate.ToString() != "01/01/0001 00:00:00")
                             {

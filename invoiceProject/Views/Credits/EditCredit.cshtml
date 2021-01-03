@@ -52,15 +52,17 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="md-form form-group">
-                    <label class="">קטגוריה</label>
-                    <select class="form-control">
+                    <label asp-for="CategoryID" class="">קטגוריה</label>
+                    <select asp-for="CategoryID" class="form-control">
                         <option></option>
-                        <option>ביגוד והנעלה</option>
-                        <option>ביטוח</option>
-                        <option>חשמל</option>
-                        <option>דלק</option>
-                        <option>מזון</option>
+                        <option value="1">ביגוד והנעלה</option>
+                        <option value="2">ביטוח</option>
+                        <option value="3">חשמל</option>
+                        <option value="4">דלק</option>
+                        <option value="5">מזון</option>
+                        <option value="6">שונות</option>
                     </select>
+                    <span asp-validation-for="CategoryID" class="text-danger"></span>
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@
 
             <tr class="thead-dark">
                 <th> @Html.DisplayNameFor(model => model.StoreName) </th>
-                <th> קטגוריה </th>
+                <th> @Html.DisplayNameFor(model => model.CategoryID) </th>
                 <th> @Html.DisplayNameFor(model => model.PurchaseDate) </th>
                 <th> @Html.DisplayNameFor(model => model.ExpireDate) </th>
                 <th  class="js-sort-number"> @Html.DisplayNameFor(model => model.Amount) </th>
@@ -38,7 +38,7 @@
                                 </a>
                                 @Html.DisplayFor(modelItem => item.StoreName)
                             </td>
-                            <td>@Html.DisplayFor(modelItem => item.CategoryID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
                             <td class="js-sort-date">@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
                             @if (item.ExpireDate.ToString() != "01/01/0001 00:00:00")
                             {

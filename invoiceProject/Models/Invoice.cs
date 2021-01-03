@@ -27,8 +27,10 @@ namespace invoiceProject.Models
         [Display(Name = "סכום")]
         public double Amount { get; set; }
 
+        [Required(ErrorMessage = "חובה להזין קטגוריה")]
         [Display(Name = "קטגוריה")]
         public int CategoryID { get; set; }
+        public Category Category { get; set; }
 
         [Required(ErrorMessage = "חובה להזין את תוקף האחריות")]
         [Display(Name = "תוקף אחריות")]

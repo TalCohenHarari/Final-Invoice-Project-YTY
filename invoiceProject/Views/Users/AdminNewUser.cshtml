@@ -15,6 +15,13 @@
                 הזן
                 פרטי משתמש
             </h2>
+            @if (ViewData["AdminNewUserError"] != null)
+            {
+                <span class="col-4"></span>
+                <div class="col-4"  style=" padding: 3% 15% 0 0;">
+                    <span style=" color:red; padding-top:8%;">@ViewData["AdminNewUserError"]</span>
+                </div>
+            }
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -75,7 +82,6 @@
             <input style="background-color: black;" class="btn btn-primary btn-block sendButton"
                    type="submit" value="הוסף" />
         </div>
-
     </form>
 </div>
 @section Scripts {

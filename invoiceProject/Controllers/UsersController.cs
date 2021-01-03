@@ -200,7 +200,25 @@ namespace invoiceProject.Controllers
             ViewBag.AdminAmountOfAllInvoices = _context.Invoice.Count();
             ViewBag.AdminAmountOfAllUsers = _context.User.Count();
 
+            //Count of the new users in the site per month:
+            ViewBag.newUsersJanuary = usersPerMonth(1);
+            ViewBag.newUsersFebruary = usersPerMonth(2);
+            ViewBag.newUsersMarch = usersPerMonth(3);
+            ViewBag.newUsersApril = usersPerMonth(4);
+            ViewBag.newUsersMay = usersPerMonth(5);
+            ViewBag.newUsersJune = usersPerMonth(6);
+            ViewBag.newUsersJulay = usersPerMonth(7);
+            ViewBag.newUsersAugust = usersPerMonth(8);
+            ViewBag.newUsersSeptember  = usersPerMonth(9);
+            ViewBag.newUsersOctober = usersPerMonth(10);
+            ViewBag.newUsersNovember = usersPerMonth(11);
+            ViewBag.newUsersDecember= usersPerMonth(12);
+
             return View();
+        }
+        public int usersPerMonth(int month)
+        {
+            return _context.User.Where(u => u.EnteranceDate.Month == month).Select(u => u).Count();
         }
         //----------------------------------------------------AdminViewUsers----------------------------------------------------
         [Authorize]
@@ -212,13 +230,13 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewInvoices()
         {
-            return View(await _context.Invoice.Include(u => u.user).ToListAsync());
+            return View(await _context.Invoice.Include(u => u.user).Include(u => u.Category).Select(i=>i).ToListAsync());
         }
         //----------------------------------------------------AdminViewCredits----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> AdminViewCredits()
         {
-            return View(await _context.Credit.Include(u=>u.user).ToListAsync());
+            return View(await _context.Credit.Include(u=>u.user).Include(u => u.Category).Select(c => c).ToListAsync());
         }
         //----------------------------------------------------AdminViewGiftCards----------------------------------------------------
         [Authorize]
@@ -244,6 +262,10 @@ namespace invoiceProject.Controllers
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(AdminViewUsers));
+            }
+            else
+            {
+                ViewData["AdminNewUserError"] = "משתמש זה כבר קיים במערכת";
             }
             return View();
         }
@@ -281,7 +303,7 @@ namespace invoiceProject.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> AdminNewCredit([Bind("UserID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
+        public async Task<IActionResult> AdminNewCredit([Bind("UserID,CreditID,CategoryID,StoreName,Amount,ExpireDate")] Credit credit)
         {
             if (ModelState.IsValid)
             {
@@ -306,7 +328,7 @@ namespace invoiceProject.Controllers
         public async Task<IActionResult> AdminNewGiftCard( int UserID, string GiftCardName, double Price)
         {
             var user = _context.User.Where(u => u.UserID == UserID).Select(u => u).FirstOrDefault();
-
+            
             var giftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price)
                 .Select(u => u).FirstOrDefault();
 

@@ -20,7 +20,7 @@
 
             <tr class="thead-dark">
                 <th> @Html.DisplayNameFor(model => model.StoreName) </th>
-                <th> קטגוריה </th>
+                <th> @Html.DisplayNameFor(model => model.CategoryID) </th>
                 <th> @Html.DisplayNameFor(model => model.ExpireDate) </th>
                 <th class="js-sort-number"> @Html.DisplayNameFor(model => model.Amount) </th>
             </tr>
@@ -38,7 +38,7 @@
                                 </a>
                                 @Html.DisplayFor(modelItem => item.StoreName)
                             </td>
-                            <td>@Html.DisplayFor(modelItem => item.CategoryID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
                             <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
                             <td>@Html.DisplayFor(modelItem => item.Amount)</td>
                         </tr>

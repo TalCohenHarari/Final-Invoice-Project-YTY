@@ -23,8 +23,12 @@ namespace invoiceProject.Models
         [Required(ErrorMessage = "חובה להזין את תוקף הזיכוי")]
         [Display(Name = "תוקף זיכוי")]
         public DateTime ExpireDate { get; set; }
+
+        [Required(ErrorMessage = "חובה להזין קטגוריה")]
         [Display(Name = "קטגוריה")]
         public int CategoryID { get; set; }
+        public Category Category { get; set; }
+
 
         public User user { get; set; }
     }
