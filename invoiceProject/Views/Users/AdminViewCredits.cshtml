@@ -33,8 +33,11 @@
                     {
                         <tr>
                             <td>
-                                <a asp-controller="Users" asp-action="AdminDeleteCredit" asp-route-id="@item.CreditID" style="text-decoration-line: none">
-                                    <i class="fa fa-trash" style=" cursor: pointer;"></i>
+                                <a asp-controller="Users" asp-action="AdminDeleteCredit" asp-route-id="@item.CreditID" style="text-decoration-line: none;float:right;">
+                                    <i class="fa fa-trash" style=" cursor: pointer;"></i> |
+                                </a>
+                                <a asp-action="AdminEditCredit" asp-route-id="@item.CreditID" style="text-decoration-line: none; float:right; margin-right:2%">
+                                    <i class="fas fa-pen" style=" cursor: pointer;"></i>
                                 </a>
                                 @Html.DisplayFor(modelItem => item.UserID)
                             </td>

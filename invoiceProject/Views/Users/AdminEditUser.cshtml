@@ -1,5 +1,5 @@
 ﻿@model invoiceProject.Models.User
-@{ ViewData["Title"] = "הוספת משתמש";
+@{ ViewData["Title"] = "עריכת משתמש";
     Layout = "_AdminLayout"; }
 
 @section css {
@@ -9,17 +9,19 @@
 
 <div id="mainDiv" class="row">
     <div class="col-1"></div>
-    <form id="contact-form" name="contact-form" class="MyForm" asp-action="AdminNewUser">
+    <form id="contact-form" name="contact-form" class="MyForm" asp-action="AdminEditUser">
         <div class="row">
+            <input asp-for="UserID" type="hidden" />
+            <input asp-for="IsAdmin" type="hidden" />
             <h2 class="h1-responsive font-weight-bold text-center my-4" style="padding-right: 13px;">
-                הזן
-                פרטי משתמש
+                ערוך
+                פירטי משתמש
             </h2>
-            @if (ViewData["AdminNewUserError"] != null)
+            @if (ViewData["AdminEditUserError"] != null)
             {
                 <span class="col-4"></span>
-                <div class="col-4"  style=" padding: 3% 15% 0 0;">
-                    <span style=" color:red; padding-top:8%;">@ViewData["AdminNewUserError"]</span>
+                <div class="col-4" style=" padding: 3% 15% 0 0;">
+                    <span style=" color:red; padding-top:8%;">@ViewData["AdminEditUserError"]</span>
                 </div>
             }
         </div>
@@ -63,7 +65,7 @@
             <div class="col-md-12">
                 <div class="md-form  form-group">
                     <label asp-for="EnteranceDate" for="subject" class="">תאריך הצטרפות</label>
-                    <input asp-for="EnteranceDate" type="date" id="subject" class="form-control">
+                    <input asp-for="EnteranceDate" type="datetime-local" id="subject" class="form-control">
                     <span asp-validation-for="EnteranceDate" class="text-danger"></span>
                 </div>
             </div>
@@ -79,8 +81,8 @@
             </div>
         </div>
         <div class="d-flex justify-content-center">
-            <input style="background-color: black;" class="btn btn-primary btn-block sendButton"
-                   type="submit" value="הוסף" />
+            <input style="background-color:black !important;" class="btn btn-primary btn-block sendButton"
+                   type="submit" value="שלח" />
         </div>
     </form>
 </div>

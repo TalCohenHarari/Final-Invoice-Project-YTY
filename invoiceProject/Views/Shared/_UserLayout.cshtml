@@ -98,7 +98,7 @@
                     <div class="sidebar-brand-icon rotate-n-15">
                         <i class="fas fa-laugh-wink"></i>
                     </div>
-                    <div class="sidebar-brand-text mx-3">שלום @Context.User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value</div>
+                    <div class="sidebar-brand-text mx-3" style=" font-size: smaller;">שלום @Context.User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value</div>
                 </div>
 
                 <!-- Divider -->
@@ -177,6 +177,12 @@
 
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Users"  asp-action="EditMyAccount" asp-route-id="@Int32.Parse(Context.Session.GetString("Logged"))">
+                        <i class="fas fa-pen"></i>
+                        <span>עריכת פירטי החשבון</span>
+                    </a>
+                </li>
             </ul>
             <!--End of Sidebar-->
             <!--contain-->
