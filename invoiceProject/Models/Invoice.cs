@@ -8,10 +8,17 @@ namespace invoiceProject.Models
 {
     public class Invoice
     {
-        [Display(Name = "מספר הלקוח")]
-        public int UserID { get; set; }
 
         public int InvoiceID { get; set; }
+
+        [Display(Name = "מספר הלקוח")]
+        public int UserID { get; set; }
+        public User user { get; set; }
+
+        [Required(ErrorMessage = "חובה להזין קטגוריה")]
+        [Display(Name = "קטגוריה")]
+        public int CategoryID { get; set; }
+        public Category Category { get; set; }
 
         [StringLength(50)]
         [Required(ErrorMessage = "חובה להזין את שם החנות")]
@@ -27,15 +34,8 @@ namespace invoiceProject.Models
         [Display(Name = "סכום")]
         public double Amount { get; set; }
 
-        [Required(ErrorMessage = "חובה להזין קטגוריה")]
-        [Display(Name = "קטגוריה")]
-        public int CategoryID { get; set; }
-        public Category Category { get; set; }
-
         [Required(ErrorMessage = "חובה להזין את תוקף האחריות")]
         [Display(Name = "תוקף אחריות")]
         public DateTime ExpireDate { get; set; }
-
-        public User user { get; set; }
     }
 }

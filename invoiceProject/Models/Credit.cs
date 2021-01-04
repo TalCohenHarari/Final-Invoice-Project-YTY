@@ -8,8 +8,7 @@ namespace invoiceProject.Models
 {
     public class Credit
     {
-        [Display(Name = "מספר הלקוח")]
-        public int UserID { get; set; }
+        
 
         public int CreditID { get; set; }
         [StringLength(50)]
@@ -29,7 +28,8 @@ namespace invoiceProject.Models
         public int CategoryID { get; set; }
         public Category Category { get; set; }
 
-
+        [Display(Name = "מספר הלקוח")]
+        public int UserID { get; set; }
         public User user { get; set; }
     }
 }
