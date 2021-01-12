@@ -69,6 +69,7 @@ namespace invoiceProject.Controllers
             if (user != null && user.Count() > 0)
             {
                 HttpContext.Session.SetString("Logged",user.FirstOrDefault().UserID.ToString());
+                HttpContext.Session.SetString("isAdmin", user.FirstOrDefault().IsAdmin.ToString());
 
                 if (user.FirstOrDefault().IsAdmin)
                 {
@@ -261,7 +262,15 @@ namespace invoiceProject.Controllers
             ViewBag.newUsersNovember = usersPerMonth(11);
             ViewBag.newUsersDecember= usersPerMonth(12);
 
-            return View();
+            if (HttpContext.Session.GetString("isAdmin")=="True")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+            
         }
         public int usersPerMonth(int month)
         {
@@ -271,57 +280,110 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminViewUsers()
         {
-            return View(await _context.User.ToListAsync());
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View(await _context.User.ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //----------------------------------------------------AdminViewInvoices----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> AdminViewInvoices()
         {
-            return View(await _context.Invoice.Include(u => u.user).Include(u => u.Category).Select(i=>i).ToListAsync());
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View(await _context.Invoice.Include(u => u.user).Include(u => u.Category).Select(i => i).ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
         }
         //----------------------------------------------------AdminViewCredits----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> AdminViewCredits()
         {
-            return View(await _context.Credit.Include(u=>u.user).Include(u => u.Category).Select(c => c).ToListAsync());
+             if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View(await _context.Credit.Include(u => u.user).Include(u => u.Category).Select(c => c).ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
         }
         //----------------------------------------------------AdminViewGiftCards----------------------------------------------------
         [Authorize]
         public async Task<IActionResult> AdminViewGiftCards()
         {
-            return View(await _context.UserGiftCard.Include(g=>g.giftCard).Include(u=>u.user).ToListAsync());
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View(await _context.UserGiftCard.Include(g => g.giftCard).Include(u => u.user).ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
         }
         //----------------------------------------------------AdminNewUser----------------------------------------------------
         //GET
         [Authorize]
         public async Task<IActionResult> AdminNewUser()
         {
-            return View();
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminNewUser([Bind("UserID,FirstName,LastName,UserName,Password,IsAdmin,Email,EnteranceDate")] User user)
         {
-            if (ModelState.IsValid && !Exists(user.UserName))
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                //user.EnteranceDate = DateTime.Now;
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(AdminViewUsers));
+                if (ModelState.IsValid && !Exists(user.UserName))
+                {
+                    //user.EnteranceDate = DateTime.Now;
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(AdminViewUsers));
+                }
+                else
+                {
+                    ViewData["AdminNewUserError"] = "משתמש זה כבר קיים במערכת";
+                }
+                return View();
             }
             else
             {
-                ViewData["AdminNewUserError"] = "משתמש זה כבר קיים במערכת";
+                return RedirectToAction(nameof(MyAccount));
             }
-            return View();
+           
         }
         //----------------------------------------------------AdminNewInvoice----------------------------------------------------
         //GET
         [Authorize]
         public async Task<IActionResult> AdminNewInvoice()
         {
-            return View();
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //POST
         [HttpPost]
@@ -329,22 +391,37 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminNewInvoice([Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
         {
-            if (invoice!=null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
+                if (invoice != null)
+                {
+                    _context.Add(invoice);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(AdminViewInvoices));
+                    return RedirectToAction(nameof(AdminViewInvoices));
+                }
+                ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
+                return View(invoice);
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
-            return View(invoice);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //----------------------------------------------------AdminNewCredit----------------------------------------------------
         //GET:
         [Authorize]
         public async Task<IActionResult> AdminNewCredit()
         {
-            return View();
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
         }
         //POST:
         [HttpPost]
@@ -352,21 +429,36 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> AdminNewCredit([Bind("UserID,CreditID,CategoryID,StoreName,Amount,ExpireDate")] Credit credit)
         {
-            if (ModelState.IsValid)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                _context.Add(credit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(AdminViewCredits));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(credit);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(AdminViewCredits));
+                }
+                ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+                return View(credit);
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-            return View(credit);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //----------------------------------------------------AdminNewGiftCard----------------------------------------------------
         //GET:
         [Authorize]
         public async Task<IActionResult> AdminNewGiftCard()
         {
-            return View();
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
         }
         //POST:
         [Authorize]
@@ -374,45 +466,61 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminNewGiftCard( int UserID, string GiftCardName, double Price)
         {
-            var user = _context.User.Where(u => u.UserID == UserID).Select(u => u).FirstOrDefault();
-            
-            var giftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price)
-                .Select(u => u).FirstOrDefault();
-
-            if (!GiftCardExists(user.UserID, GiftCardName, Price))
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                var userGiftCard = new UserGiftCard()
-                {
-                    Count = 1,
-                    UserID = user.UserID,
-                    GiftCardID = giftCard.GiftCardID,
-                };
+                var user = _context.User.Where(u => u.UserID == UserID).Select(u => u).FirstOrDefault();
 
-                _context.UserGiftCard.Add(userGiftCard);
+                var giftCard = _context.GiftCard.Where(g => g.GiftCardName == GiftCardName && g.Price == Price)
+                    .Select(u => u).FirstOrDefault();
+
+                if (!GiftCardExists(user.UserID, GiftCardName, Price))
+                {
+                    var userGiftCard = new UserGiftCard()
+                    {
+                        Count = 1,
+                        UserID = user.UserID,
+                        GiftCardID = giftCard.GiftCardID,
+                    };
+
+                    _context.UserGiftCard.Add(userGiftCard);
+                }
+                else
+                {
+                    _context.UserGiftCard.Where(u => u.UserID == user.UserID).FirstOrDefault().Count++;
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AdminViewGiftCards));
             }
             else
             {
-                _context.UserGiftCard.Where(u => u.UserID == user.UserID).FirstOrDefault().Count++;
+                return RedirectToAction(nameof(MyAccount));
             }
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(AdminViewGiftCards));
+            
         }
         //----------------------------------------------------AdminEditUser----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminEditUser(int? id)
         {
-            if (id == null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
+                var user = await _context.User.FindAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return View(user);
             }
-            return View(user);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
 
         // POST
@@ -421,52 +529,68 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminEditUser([Bind("UserID,FirstName,LastName,UserName,Password,IsAdmin,Email,EnteranceDate")] User user)
         {
-            //Search if there is the same userName like the "new" one, and jump on the current user:
-            var userNameIsValid = _context.User.Where(u => u.UserName == user.UserName && u.UserID!=user.UserID).Select(u => u);
-
-            if (ModelState.IsValid && !(userNameIsValid.Count()>0))
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                try
+                //Search if there is the same userName like the "new" one, and jump on the current user:
+                var userNameIsValid = _context.User.Where(u => u.UserName == user.UserName && u.UserID != user.UserID).Select(u => u);
+
+                if (ModelState.IsValid && !(userNameIsValid.Count() > 0))
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!UserExists(user.UserID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(AdminViewUsers));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!UserExists(user.UserID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ViewData["AdminEditUserError"] = "שם משתמש זה כבר קיים במערכת";
                 }
-                return RedirectToAction(nameof(AdminViewUsers));
+                return View(user);
             }
             else
             {
-                ViewData["AdminEditUserError"] = "שם משתמש זה כבר קיים במערכת";
+                return RedirectToAction(nameof(MyAccount));
             }
-            return View(user);
+           
         }
         //----------------------------------------------------AdminEditInvoice----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminEditInvoice(int? id)
         {
-            if (id == null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var invoice = await _context.Invoice.FindAsync(id);
-            if (invoice == null)
-            {
-                return NotFound();
+                var invoice = await _context.Invoice.FindAsync(id);
+                if (invoice == null)
+                {
+                    return NotFound();
+                }
+                ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
+                return View(invoice);
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
-            return View(invoice);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
 
         // POST:
@@ -475,38 +599,55 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminEditInvoice(int id, [Bind("UserID,InvoiceID,StoreName,PurchaseDate,Amount,CategoryID,ExpireDate")] Invoice invoice)
         {
-            if (id != invoice.InvoiceID)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id != invoice.InvoiceID)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
+                if (ModelState.IsValid)
+                {
                     _context.Update(invoice);
                     await _context.SaveChangesAsync();
-               
-                return RedirectToAction(nameof(AdminViewInvoices));
+
+                    return RedirectToAction(nameof(AdminViewInvoices));
+                }
+                ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
+                return View(invoice);
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", invoice.UserID);
-            return View(invoice);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+
+           
         }
         //----------------------------------------------------AdminEditCredit----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminEditCredit(int? id)
         {
-            if (id == null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var credit = await _context.Credit.FindAsync(id);
-            if (credit == null)
-            {
-                return NotFound();
+                var credit = await _context.Credit.FindAsync(id);
+                if (credit == null)
+                {
+                    return NotFound();
+                }
+                ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+                return View(credit);
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-            return View(credit);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
 
         // POST:
@@ -515,38 +656,54 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AdminEditCredit(int id, [Bind("UserID,CategoryID,CreditID,StoreName,Amount,ExpireDate")] Credit credit)
         {
-            if (id != credit.CreditID)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id != credit.CreditID)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                _context.Update(credit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(AdminViewCredits));
+                if (ModelState.IsValid)
+                {
+                    _context.Update(credit);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(AdminViewCredits));
+                }
+                ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
+                return View(credit);
             }
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "FirstName", credit.UserID);
-            return View(credit);
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //----------------------------------------------------AdminDeleteUser----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminDeleteUser(int? id)
         {
-            if (id == null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (user == null)
+                var user = await _context.User
+                    .FirstOrDefaultAsync(m => m.UserID == id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return View();
+            }
+            else
             {
-                return NotFound();
+                return RedirectToAction(nameof(MyAccount));
             }
-
-            return View();
+           
         }
 
         // POST
@@ -555,30 +712,46 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(AdminViewUsers));
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                var user = await _context.User.FindAsync(id);
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AdminViewUsers));
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+  
         }
         //----------------------------------------------------AdminDeleteInvoice----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminDeleteInvoice(int? id)
         {
-            if (id == null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var invoice = await _context.Invoice
-                .Include(c => c.user)
-                .FirstOrDefaultAsync(m => m.InvoiceID == id);
-            if (invoice == null)
+                var invoice = await _context.Invoice
+                    .Include(c => c.user)
+                    .FirstOrDefaultAsync(m => m.InvoiceID == id);
+                if (invoice == null)
+                {
+                    return NotFound();
+                }
+
+                return View();
+            }
+            else
             {
-                return NotFound();
+                return RedirectToAction(nameof(MyAccount));
             }
-
-            return View();
+            
         }
         // POST:
         [HttpPost, ActionName("AdminDeleteInvoice")]
@@ -586,30 +759,46 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirm(int? id)
         {
-            var invoice = await _context.Invoice.FindAsync(id);
-            _context.Invoice.Remove(invoice);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(AdminViewInvoices));
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                var invoice = await _context.Invoice.FindAsync(id);
+                _context.Invoice.Remove(invoice);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AdminViewInvoices));
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+ 
         }
         //----------------------------------------------------AdminDeleteCredit----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminDeleteCredit(int? id)
         {
-            if (id == null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var credit = await _context.Credit
-                .Include(c => c.user)
-                .FirstOrDefaultAsync(m => m.CreditID == id);
-            if (credit == null)
+                var credit = await _context.Credit
+                    .Include(c => c.user)
+                    .FirstOrDefaultAsync(m => m.CreditID == id);
+                if (credit == null)
+                {
+                    return NotFound();
+                }
+
+                return View();
+            }
+            else
             {
-                return NotFound();
+                return RedirectToAction(nameof(MyAccount));
             }
-
-            return View();
+           
         }
 
         // POST:
@@ -618,29 +807,45 @@ namespace invoiceProject.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirme(int? id)
         {
-            var credit = await _context.Credit.FindAsync(id);
-            _context.Credit.Remove(credit);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(AdminViewCredits));
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                var credit = await _context.Credit.FindAsync(id);
+                _context.Credit.Remove(credit);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AdminViewCredits));
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+           
         }
         //----------------------------------------------------AdminDeleteGiftCard----------------------------------------------------
         // GET
         [Authorize]
         public async Task<IActionResult> AdminDeleteGiftCard(int? userID,int? giftCardID)
         {
-            if (userID == null && giftCardID==null)
+            if (HttpContext.Session.GetString("isAdmin") == "True")
             {
-                return NotFound();
-            }
+                if (userID == null && giftCardID == null)
+                {
+                    return NotFound();
+                }
 
-            var userGiftCard = await _context.UserGiftCard
-                .FirstOrDefaultAsync(g => g.GiftCardID == giftCardID && g.UserID == userID);
-            if (userGiftCard == null)
+                var userGiftCard = await _context.UserGiftCard
+                    .FirstOrDefaultAsync(g => g.GiftCardID == giftCardID && g.UserID == userID);
+                if (userGiftCard == null)
+                {
+                    return NotFound();
+                }
+
+                return View();
+            }
+            else
             {
-                return NotFound();
+                return RedirectToAction(nameof(MyAccount));
             }
-
-            return View();
+           
         }
 
         // POST:
@@ -649,11 +854,19 @@ namespace invoiceProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmd(int userID, int giftCardID)
         {
-            var userGiftCard = await _context.UserGiftCard.FindAsync(userID, giftCardID);
-            _context.UserGiftCard.Remove(userGiftCard);
-            await _context.SaveChangesAsync();
+            if (HttpContext.Session.GetString("isAdmin") == "True")
+            {
+                var userGiftCard = await _context.UserGiftCard.FindAsync(userID, giftCardID);
+                _context.UserGiftCard.Remove(userGiftCard);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(AdminViewGiftCards));
+                return RedirectToAction(nameof(AdminViewGiftCards));
+            }
+            else
+            {
+                return RedirectToAction(nameof(MyAccount));
+            }
+            
         }
         //----------------------------------------------------Functions----------------------------------------------------
         private bool UserExists(int id)
