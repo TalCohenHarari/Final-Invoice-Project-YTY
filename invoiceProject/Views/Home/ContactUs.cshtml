@@ -1,7 +1,7 @@
-﻿@{ 
+﻿@{
     ViewData["Title"] = "צור קשר";
-    Layout = "_Layout-2"; 
-  }
+    Layout = "_Layout-2";
+}
 @section css {
     <link href="@Url.Content("~/css/ContactUs.css")" rel="stylesheet" />
 }
@@ -16,7 +16,7 @@
     <div class="row formRow" style="margin-top: 8%;">
         <div class="col-lg-6">
             <h2 class="formheader h1-responsive font-weight-bold text-right my-4">צור קשר</h2>
-            <form class="form" id="contact-form" name="contact-form" action="mail.php" method="POST">
+            <form class="form" id="contact-form" name="contact-form" onsubmit="return false;">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="md-form form-group">
@@ -51,9 +51,18 @@
                 </div>
                 <div class="buttonSubmitDir">
                     <button style="display: block" class="buttonSubmit btn btn-secondary btn-lg" type="submit"
-                            form="contact-form" value="Submit">
+                            form="contact-form" value="Submit" id="unclick" onclick="openPop();">
                         שליחה
                     </button>
+                </div>
+                <div class="popup div" id="pop">
+                    <h2>ההודעה נשלחה בהצלחה!</h2>
+                    <p>
+                        תודה שפנית אלינו
+                        <br />
+                        הצוות שלנו יצור איתך קשר בהדקם
+                    </p>
+                    <button class="closeButton" id="close" onclick="closePop();">סגור</button>
                 </div>
             </form>
         </div>
@@ -75,3 +84,7 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <script src="~/js/pop.js"></script>
+}
