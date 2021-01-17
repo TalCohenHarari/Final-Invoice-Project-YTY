@@ -15,51 +15,53 @@
         <div>
             <input id="myInput" type="text" name="search" placeholder="חיפוש..." class="form-control search-input" data-table="customers-list">
         </div>
-        <table class="table table-striped table-bordered js-sort-table customers-list">
+        <div style="overflow-x: scroll; width: 100%;">
+            <table  class="table table-striped table-bordered js-sort-table customers-list">
 
-            <tr class="thead-dark">
-                <th> @Html.DisplayNameFor(model => model.StoreName) </th>
-                <th> @Html.DisplayNameFor(model => model.CategoryID) </th>
-                <th> @Html.DisplayNameFor(model => model.PurchaseDate) </th>
-                <th> @Html.DisplayNameFor(model => model.ExpireDate) </th>
-                <th  class="js-sort-number"> @Html.DisplayNameFor(model => model.Amount) </th>
-            </tr>
-            @{ if (Model.Count() != 0)
-                {
-                    foreach (var item in Model)
+                <tr class="thead-dark">
+                    <th> @Html.DisplayNameFor(model => model.StoreName) </th>
+                    <th> @Html.DisplayNameFor(model => model.CategoryID) </th>
+                    <th> @Html.DisplayNameFor(model => model.PurchaseDate) </th>
+                    <th> @Html.DisplayNameFor(model => model.ExpireDate) </th>
+                    <th class="js-sort-number"> @Html.DisplayNameFor(model => model.Amount) </th>
+                </tr>
+                @{ if (Model.Count() != 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-action="DeleteInvoice" asp-route-id="@item.InvoiceID" style="text-decoration-line: none; float:right">
+                                        <i class="fa fa-trash" style=" cursor: pointer;"></i> |
+                                    </a>
+                                    <a asp-action="EditInvoice" asp-route-id="@item.InvoiceID" style="text-decoration-line: none; float:right; margin-right:2%">
+                                        <i class="fas fa-pen" style=" cursor: pointer;"></i>
+                                    </a>
+                                    @Html.DisplayFor(modelItem => item.StoreName)
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
+                                <td class="js-sort-date">@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
+                                @if (item.ExpireDate.ToString() != "01/01/0001 00:00:00")
+                                {
+                                    <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
+                                }
+                                else
+                                {
+                                    <td>אין אחריות </td>
+                                }
+                                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>
-                                <a asp-action="DeleteInvoice" asp-route-id="@item.InvoiceID" style="text-decoration-line: none; float:right">
-                                    <i class="fa fa-trash" style=" cursor: pointer;"></i> |
-                                </a>
-                                <a asp-action="EditInvoice" asp-route-id="@item.InvoiceID" style="text-decoration-line: none; float:right; margin-right:2%">
-                                    <i class="fas fa-pen" style=" cursor: pointer;"></i>
-                                </a>
-                                @Html.DisplayFor(modelItem => item.StoreName)
-                            </td>
-                            <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
-                            <td class="js-sort-date">@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
-                            @if (item.ExpireDate.ToString() != "01/01/0001 00:00:00")
-                            {
-                                <td>@Html.DisplayFor(modelItem => item.ExpireDate)</td>
-                            }
-                            else
-                            {
-                                <td>אין אחריות </td>
-                            }
-                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            <td colspan="5">אין לך שום חשבוניות</td>
                         </tr>
                     }
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="5">אין לך שום חשבוניות</td>
-                    </tr>
-                }
-            }
-        </table>
+            </table>
+        </div>
     </div>
 </div>
 
