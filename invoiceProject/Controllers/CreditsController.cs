@@ -158,22 +158,3 @@ namespace invoiceProject.Controllers
     }
 }
 
-//----------------------------------------------------Details----------------------------------------------------
-// GET
-//public async Task<IActionResult> Details(int? id)
-//{
-//    if (id == null)
-//    {
-//        return NotFound();
-//    }
-
-//    var credit = await _context.Credit
-//        .Include(c => c.user)
-//        .FirstOrDefaultAsync(m => m.CreditID == id);
-//    if (credit == null)
-//    {
-//        return NotFound();
-//    }
-
-//    return View(credit);
-//}

@@ -213,21 +213,3 @@ namespace invoiceProject.Controllers
 
 
 
-
-//// GET: GiftCards/Details/5
-//public async Task<IActionResult> Details(int? id)
-//{
-//    if (id == null)
-//    {
-//        return NotFound();
-//    }
-
-//    var giftCard = await _context.GiftCard
-//        .FirstOrDefaultAsync(m => m.GiftCardID == id);
-//    if (giftCard == null)
-//    {
-//        return NotFound();
-//    }
-
-//    return View(giftCard);
-//}

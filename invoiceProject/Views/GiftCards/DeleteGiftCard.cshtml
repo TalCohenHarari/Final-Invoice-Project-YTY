@@ -1,9 +1,11 @@
 ﻿@model invoiceProject.Models.UserGiftCard
+
 @{ ViewData["Title"] = "מחיקת גיפט-קארד";
     Layout = "_UserLayout"; }
 @section css {
     <link href="@Url.Content("~/css/DeleteButton.css")" rel="stylesheet" />
 }
+
 <div style="margin:auto;" class="col-6">
     <form style="text-align:center; margin-bottom: 15%;" asp-controller="GiftCards" asp-action="DeleteGiftCard">
         <h1 style="font-size:xx-large" class="hrOther">מחיקת גיפט-קארד</h1>

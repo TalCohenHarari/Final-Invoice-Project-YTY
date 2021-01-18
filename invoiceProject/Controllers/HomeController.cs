@@ -11,11 +11,7 @@ namespace invoiceProject.Controllers
     {
         
         public IActionResult Index() 
-        {
-            //if (HttpContext.Session.GetString("Logged") != null)
-            //{
-            //    return RedirectToAction("MyAccount", "Users");
-            //}
+        {  
             return View();
         }
         //GET
